@@ -1,6 +1,7 @@
 import React from "react";
 import {useSelector, useDispatch} from "react-redux";
 import {SafeAreaView, ScrollView, Text, View, TouchableOpacity} from "react-native";
+import { Button, Icon } from '@ant-design/react-native';
 
 const Home = (props: { navigation: any }) => {
     const userInfo = useSelector(state => state.userInfo);
@@ -11,7 +12,10 @@ const Home = (props: { navigation: any }) => {
             <View style={{height: 300, backgroundColor: 'red'}}>
                 <Text>
                     {userInfo.username}
+
                 </Text>
+                <Icon name="account-book" size="md" color="white" />
+                <Button>antd-mobile button</Button>
             </View>
             <View style={{height: 300, backgroundColor: 'red'}}>
                 <Text>
@@ -25,7 +29,7 @@ const Home = (props: { navigation: any }) => {
                     </TouchableOpacity>
                 </Text>
             </View>
-            <View style={{height: 300, backgroundColor: 'red'}}>
+            <View style={{backgroundColor: 'red'}}>
                 <Text>
                     首页哦
                 </Text>

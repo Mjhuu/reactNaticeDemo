@@ -39,16 +39,31 @@ const App = () => {
                 initialRouteName={'Home'}
             >
                 <Stack.Screen options={{headerMode: 'none'}} name="Home" component={() => <Tab.Navigator
-                    tabBarOptions={{
-                        activeTintColor: 'red',
-                        inactiveTintColor: 'gray',
-                        tabStyle: {
-                            backgroundColor: '#ddd',
-                            paddingBottom: 15,
-                            borderRightWidth: 1,
-                            borderRightColor: '#fff'
-                        },
-                    }}
+                    screenOptions={({route})=>({
+                        tabBarIcon:({focused,size,color})=>{
+                            let icon;
+                            if(route.name==="Home"){
+                                icon = focused ?
+                                    (
+                                        <Image
+                                            source={ require('./images/home_s.png') }
+                                            style={{ width: 25, height: 25, }} />
+                                    ) : ( <Image
+                                        source={ require('./images/home.png') }
+                                        style={{ width: 25, height: 25, }} />)
+                            }else if(route.name==="Mine"){
+                                icon = focused ? (
+                                    <Image
+                                        source={ require('./images/mine_s.png') }
+                                        style={{ width: 25, height: 25, }} />
+                                ) : (<Image
+                                    source={ require('./images/mine.png') }
+                                    style={{ width: 25, height: 25, }} />)
+                            }
+                            return icon;
+                        }
+                    })}
+                    tabBarOptions={{activeTintColor:"#07B5D1",inactiveTintColor:"gray"}}
                     backBehavior="none"
                 >
                     <Tab.Screen name="Home" component={Home} options={{
