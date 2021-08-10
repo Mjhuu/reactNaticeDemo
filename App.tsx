@@ -17,6 +17,7 @@ import store from "./src/Store/index";
 import Home from "./pages/Home";
 import Mine from "./pages/Mine";
 import Login from "./pages/LoginScreen"
+import SplashScreen from 'react-native-splash-screen'
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,10 @@ const App = () => {
 
     const windowWidth = useWindowDimensions().width;
     const windowHeight = useWindowDimensions().height;
+
+    useEffect(() => {
+        SplashScreen.hide();
+    })
 
     return <Provider store={store}>
         <NavigationContainer>
