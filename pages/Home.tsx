@@ -9,6 +9,8 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import {getWxInfo, uploadFile} from "../src/Api";
 // @ts-ignore
 import { Thread } from 'react-native-threads';
+import { RSAUtil } from "../src/common/rsa";
+import { RSA } from 'react-native-rsa-native';
 
 const Home = (props: { navigation: any }) => {
     const userInfo = useSelector((state: any) => state.userInfo);
@@ -16,6 +18,23 @@ const Home = (props: { navigation: any }) => {
     const fetchInfo = async () => {
         let res = await getWxInfo();
         console.log(res);
+        // console.log(RSAUtil.getRSAKeyPair());
+
+        let message = "my secret message";
+
+        RSA.generateKeys(4096) // set key size
+          .then(keys => {
+              console.log('4096 private:', keys.private); // the private key
+              console.log('4096 public:', keys.public); // the public key
+              RSA.encrypt(message, keys.public)
+                .then(encodedMessage => {
+                    console.log(`the encoded message is ${encodedMessage}`);
+                    RSA.decrypt(encodedMessage, keys.private)
+                      .then(decryptedMessage => {
+                          console.log(`The original message was ${decryptedMessage}`);
+                      });
+                });
+          });
     }
     const otherDo = async () => {
 // start a new react native JS process
@@ -27,7 +46,10 @@ const Home = (props: { navigation: any }) => {
 // listen for messages
         thread.onmessage = (message: any) => {
           console.log(message);
-            thread.terminate();
+          if(message == '3'){
+              thread.terminate();
+
+          }
         };
 
 // stop the JS process
