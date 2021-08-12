@@ -6248,6 +6248,11 @@ react-native-tab-navigator@^0.3.4:
     immutable "^3.8.1"
     prop-types "^15.5.10"
 
+react-native-threads@^0.0.19:
+  version "0.0.19"
+  resolved "https://registry.nlark.com/react-native-threads/download/react-native-threads-0.0.19.tgz#17464b60715d774ab60e1ca6a97e31d706aa6125"
+  integrity sha1-F0ZLYHFdd0q2DhymqX4x1waqYSU=
+
 react-native-vector-icons@^8.1.0:
   version "8.1.0"
   resolved "https://registry.npm.taobao.org/react-native-vector-icons/download/react-native-vector-icons-8.1.0.tgz?cache=0&sync_timestamp=1614093260792&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-native-vector-icons%2Fdownload%2Freact-native-vector-icons-8.1.0.tgz#e8ee2b17bc4d9f636da1c6f67feee8e2a850c3d8"

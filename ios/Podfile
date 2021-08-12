@@ -12,6 +12,8 @@ target 'AwesomeTSProject' do
     :hermes_enabled => false
   )
 
+  pod 'RNThread', :path => '../node_modules/react-native-threads'
+
   target 'AwesomeTSProjectTests' do
     inherit! :complete
     # Pods for testing

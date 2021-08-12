@@ -1,12 +1,14 @@
 import React from "react";
-import {useSelector, useDispatch} from "react-redux";
-import {SafeAreaView, ScrollView, Text, View, TouchableOpacity} from "react-native";
+import {useSelector, useDispatch} from 'react-redux';
+import {SafeAreaView, ScrollView, Text, View, TouchableOpacity} from 'react-native';
 import {Button, Icon} from '@ant-design/react-native';
-import RNFS from "react-native-fs"
-import DocumentPicker from 'react-native-document-picker'
+import RNFS from 'react-native-fs';
+import DocumentPicker from 'react-native-document-picker';
 // @ts-ignore
-import RNFetchBlob from 'react-native-fetch-blob'
-import {getWxInfo, uploadFile} from "../src/Api"
+import RNFetchBlob from 'react-native-fetch-blob';
+import {getWxInfo, uploadFile} from "../src/Api";
+// @ts-ignore
+import { Thread } from 'react-native-threads';
 
 const Home = (props: { navigation: any }) => {
     const userInfo = useSelector((state: any) => state.userInfo);
@@ -14,6 +16,22 @@ const Home = (props: { navigation: any }) => {
     const fetchInfo = async () => {
         let res = await getWxInfo();
         console.log(res);
+    }
+    const otherDo = async () => {
+// start a new react native JS process
+        const thread = new Thread('../src/thread/index.js');
+
+// send a message, strings only
+        thread.postMessage('hello from main');
+
+// listen for messages
+        thread.onmessage = (message: any) => {
+          console.log(message);
+            thread.terminate();
+        };
+
+// stop the JS process
+//         thread.terminate();
     }
 
     const openFile = async () => {
@@ -60,6 +78,7 @@ const Home = (props: { navigation: any }) => {
                     {userInfo.username}
                 </Text>
                 <Icon name="alibaba" size="md" color="white"/>
+                <Button type={'primary'} onPress={otherDo}>其他线程去做</Button>
                 <Button onPress={fetchInfo}>获取数据</Button>
                 <Button onPress={openFile}>选择文件</Button>
             </View>
