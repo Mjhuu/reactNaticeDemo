@@ -7,7 +7,7 @@ import {RSAUtil} from "../common/rsa";
 self.onmessage = (message) => {
   console.log(message);
 
-/*// An example 128-bit key (16 bytes * 8 bits/byte = 128 bits)
+  // An example 128-bit key (16 bytes * 8 bits/byte = 128 bits)
   var key = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ];
 
 // Convert text to bytes
@@ -34,18 +34,10 @@ self.onmessage = (message) => {
 
 // Convert our bytes back into text
   var decryptedText = aesjs.utils.utf8.fromBytes(decryptedBytes);
-// "Text may be any length you wish, no padding is required."*/
-  let index = 0
-  let timer = setInterval(() => {
-    index++;
-    if(index === 3){
-      clearInterval(timer)
-    }
-    self.postMessage('' + index)
+// "Text may be any length you wish, no padding is required."
 
-  }, 1000)
 
-  self.postMessage(`md5：${Md5.hex_md5("123456")}, encryptedHex：${encryptedHex}，decryptedText：${decryptedText}`);
+  self.postMessage(JSON.stringify({md5: Md5.hex_md5("123456"), encryptedHex: encryptedHex, decryptedText: decryptedText}));
 
 }
 

@@ -14,6 +14,8 @@ target 'AwesomeTSProject' do
 
   pod 'RNThread', :path => '../node_modules/react-native-threads'
 
+  pod 'react-native-rsa-native', :path => '../node_modules/react-native-rsa-native'
+
   target 'AwesomeTSProjectTests' do
     inherit! :complete
     # Pods for testing

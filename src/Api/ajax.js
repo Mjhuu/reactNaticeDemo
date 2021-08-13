@@ -1,9 +1,11 @@
 import axios from 'axios'
 import Qs from 'qs'
+import {Toast} from "@ant-design/react-native";
 
-export default function ajax({url = '', params = {}, type = 'GET', contentType = 'form', cb, onProgress}) {
+export default function ajax({url = '', params = {}, type = 'GET', contentType = 'form', cb, onProgress, timeout = 1000 * 15}) {
   const CancelToken = axios.CancelToken;
   axios.defaults.withCredentials = true;
+
   // 1. 定义promise对象
   let promise;
   return new Promise((resolve, reject) => {
@@ -23,6 +25,7 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
       url += '?' + paramsStr;
       // 2.4 发送get请求
       promise = axios.get(url, {
+        timeout,
         cancelToken: new CancelToken(function executor(c) {
           cb && cb(c);
         })
@@ -31,6 +34,7 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
       if ('form' === contentType.toLowerCase()) {
         promise = axios[type.toLowerCase()](url, Qs.stringify(params), {
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          timeout,
           cancelToken: new CancelToken(function executor(c) {
             cb && cb(c);
           })
@@ -38,6 +42,7 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
       } else if ('json' === contentType.toLowerCase()) {
         promise = axios[type.toLowerCase()](url, JSON.stringify(params), {
           headers: {'Content-Type': 'application/json'},
+          timeout,
           cancelToken: new CancelToken(function executor(c) {
             cb && cb(c);
           })
@@ -55,6 +60,7 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
         })
       } else {
         promise = axios[type.toLowerCase()](url, params, {
+          timeout,
           cancelToken: new CancelToken(function executor(c) {
             cb && cb(c);
           })
@@ -69,6 +75,11 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
       resolve(response.data);
 
     }).catch(error => {
+      if(error.message.includes('timeout')){
+        Toast.fail({
+          content: '网络超时'
+        })
+      }
       reject(error)
     })
   })

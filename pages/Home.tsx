@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import {useSelector, useDispatch} from 'react-redux';
 import {SafeAreaView, ScrollView, Text, View, TouchableOpacity} from 'react-native';
-import {Button, Icon} from '@ant-design/react-native';
+import { Button, Icon, Provider } from "@ant-design/react-native";
 import RNFS from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
 // @ts-ignore
@@ -10,31 +10,26 @@ import {getWxInfo, uploadFile} from "../src/Api";
 // @ts-ignore
 import { Thread } from 'react-native-threads';
 import { RSAUtil } from "../src/common/rsa";
-import { RSA } from 'react-native-rsa-native';
 
 const Home = (props: { navigation: any }) => {
     const userInfo = useSelector((state: any) => state.userInfo);
+    const [md5Info, setMd5Info] = useState({md5: '',
+        encryptedHex: '',
+        decryptedText: ''})
+    const [pubPriInfo, setPubPriInfo] = useState({private: '',
+        public: '',})
 
     const fetchInfo = async () => {
         let res = await getWxInfo();
-        console.log(res);
-        // console.log(RSAUtil.getRSAKeyPair());
+        console.log(res)
 
-        let message = "my secret message";
+    }
+    const pubPri = async () => {
+      RSAUtil.getRSAKeyPair().then(d => {
+        console.log(d);
+          setPubPriInfo(d)
+      })
 
-        RSA.generateKeys(4096) // set key size
-          .then(keys => {
-              console.log('4096 private:', keys.private); // the private key
-              console.log('4096 public:', keys.public); // the public key
-              RSA.encrypt(message, keys.public)
-                .then(encodedMessage => {
-                    console.log(`the encoded message is ${encodedMessage}`);
-                    RSA.decrypt(encodedMessage, keys.private)
-                      .then(decryptedMessage => {
-                          console.log(`The original message was ${decryptedMessage}`);
-                      });
-                });
-          });
     }
     const otherDo = async () => {
 // start a new react native JS process
@@ -45,11 +40,9 @@ const Home = (props: { navigation: any }) => {
 
 // listen for messages
         thread.onmessage = (message: any) => {
-          console.log(message);
-          if(message == '3'){
-              thread.terminate();
-
-          }
+          console.log(JSON.parse(message));
+          setMd5Info(JSON.parse(message))
+          // thread.terminate();
         };
 
 // stop the JS process
@@ -93,36 +86,46 @@ const Home = (props: { navigation: any }) => {
         }
     }
 
-    return <SafeAreaView>
-        <ScrollView>
-            <View style={{height: 300, backgroundColor: 'red'}}>
-                <Text>
-                    {userInfo.username}
-                </Text>
-                <Icon name="alibaba" size="md" color="white"/>
-                <Button type={'primary'} onPress={otherDo}>其他线程去做</Button>
-                <Button onPress={fetchInfo}>获取数据</Button>
-                <Button onPress={openFile}>选择文件</Button>
-            </View>
-            <View style={{height: 300, backgroundColor: 'red'}}>
-                <Text>
-                    首页哦
-                </Text>
-            </View>
-            <View style={{height: 300, backgroundColor: 'red'}}>
-                <Text>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('Login')}>
-                        <Text>跳转登陆</Text>
-                    </TouchableOpacity>
-                </Text>
-            </View>
-            <View style={{backgroundColor: 'red'}}>
-                <Text>
-                    首页哦
-                </Text>
-            </View>
-        </ScrollView>
-    </SafeAreaView>
+    return <Provider>
+        <SafeAreaView>
+            <ScrollView>
+                <View>
+                    <Text>
+                        {userInfo.username}
+                    </Text>
+                    <Text>
+                        Md5：{md5Info.md5}
+                    </Text>
+                    <Text>
+                        encryptedHex：{md5Info.encryptedHex}
+                    </Text>
+                    <Text>
+                        decryptedText：{md5Info.decryptedText}
+                    </Text>
+
+                    <Icon name="alibaba" size="md" color="white"/>
+                    <Button type={'primary'} onPress={otherDo}>其他线程去做</Button>
+                    <Button onPress={fetchInfo}>获取数据</Button>
+                    <Button onPress={openFile}>选择文件</Button>
+                    <Button onPress={pubPri}>公私钥</Button>
+
+                    <Text>
+                        public：{pubPriInfo.public}
+                    </Text>
+                    <Text>
+                        private：{pubPriInfo.private}
+                    </Text>
+                </View>
+                <View>
+                    <Text>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('Login')}>
+                            <Text>跳转登陆</Text>
+                        </TouchableOpacity>
+                    </Text>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
+    </Provider>
 }
 
 export default Home
