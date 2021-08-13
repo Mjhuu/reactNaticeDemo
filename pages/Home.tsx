@@ -11,6 +11,9 @@ import {getWxInfo, uploadFile} from "../src/Api";
 import { Thread } from 'react-native-threads';
 import { RSAUtil } from "../src/common/rsa";
 
+// @ts-ignore
+import RNRestart from 'react-native-restart';
+
 const Home = (props: { navigation: any }) => {
     const userInfo = useSelector((state: any) => state.userInfo);
     const [md5Info, setMd5Info] = useState({md5: '',
@@ -18,11 +21,11 @@ const Home = (props: { navigation: any }) => {
         decryptedText: ''})
     const [pubPriInfo, setPubPriInfo] = useState({private: '',
         public: '',})
+    const [error, setError] = useState()
 
     const fetchInfo = async () => {
         let res = await getWxInfo();
         console.log(res)
-
     }
     const pubPri = async () => {
       RSAUtil.getRSAKeyPair().then(d => {
@@ -32,18 +35,19 @@ const Home = (props: { navigation: any }) => {
 
     }
     const otherDo = async () => {
-// start a new react native JS process
-        const thread = new Thread('../src/thread/index.js');
+            // start a new react native JS process
+            // const thread = new Thread('thread/index.js');
+            const thread = new Thread('../src/thread/index.js');
 
 // send a message, strings only
-        thread.postMessage('hello from main');
+            thread.postMessage('hello from main');
 
 // listen for messages
-        thread.onmessage = (message: any) => {
-          console.log(JSON.parse(message));
-          setMd5Info(JSON.parse(message))
-          // thread.terminate();
-        };
+            thread.onmessage = (message: any) => {
+                console.log(JSON.parse(message));
+                setMd5Info(JSON.parse(message))
+                // thread.terminate();
+            };
 
 // stop the JS process
 //         thread.terminate();
@@ -72,7 +76,39 @@ const Home = (props: { navigation: any }) => {
                     stream.onEnd(() => {
                         console.log(data.length)
                         console.log(res[0].size);
+                        let path = RNFS.DownloadDirectoryPath + '/test.png';
+                        RNFetchBlob.fs.exists(path)
+                          .then((exist: boolean) => {
+                              if(!exist){
+                                  RNFetchBlob.fs.createFile(path, [], 'ascii').then(() => {
+                                      RNFetchBlob.fs.writeStream(
+                                        RNFS.DownloadDirectoryPath + '/test.png',
+                                        // encoding, should be one of `base64`, `utf8`, `ascii`
+                                        'ascii',
+                                        // should data append to existing content ?
+                                        true)
+                                        .then((ofstream) => {
+                                            ofstream.write(data)
+                                            ofstream.close()
+                                            console.log(RNFS.DownloadDirectoryPath + '/test.text');
+                                        })
+                                  })
+                              }else {
+                                  RNFetchBlob.fs.writeStream(
+                                    RNFS.DownloadDirectoryPath + '/test.png',
+                                    // encoding, should be one of `base64`, `utf8`, `ascii`
+                                    'ascii',
+                                    // should data append to existing content ?
+                                    true)
+                                    .then((ofstream) => {
+                                        ofstream.write(data)
+                                        ofstream.close()
+                                        console.log(RNFS.DownloadDirectoryPath + '/test.text');
+                                    })
+                              }
 
+                              /**/
+                          })
                     })
                 }).catch(err => {
                 console.log(err);
@@ -108,12 +144,18 @@ const Home = (props: { navigation: any }) => {
                     <Button onPress={fetchInfo}>获取数据</Button>
                     <Button onPress={openFile}>选择文件</Button>
                     <Button onPress={pubPri}>公私钥</Button>
+                    <Button onPress={() => RNRestart.Restart()}>重启应用</Button>
 
                     <Text>
                         public：{pubPriInfo.public}
                     </Text>
                     <Text>
                         private：{pubPriInfo.private}
+                    </Text>
+                </View>
+                <View>
+                    <Text>
+                        error：{error}
                     </Text>
                 </View>
                 <View>

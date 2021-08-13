@@ -6176,6 +6176,11 @@ react-native-document-picker@^6.0.2:
   dependencies:
     invariant "^2.2.4"
 
+react-native-exception-handler@^2.10.10:
+  version "2.10.10"
+  resolved "https://registry.nlark.com/react-native-exception-handler/download/react-native-exception-handler-2.10.10.tgz#b6bfe2b7e6ea4a4deb1f518f48ce2ee1d4843497"
+  integrity sha1-tr/it+bqSk3rH1GPSM4u4dSENJc=
+
 react-native-fetch-blob@^0.10.8:
   version "0.10.8"
   resolved "https://registry.npm.taobao.org/react-native-fetch-blob/download/react-native-fetch-blob-0.10.8.tgz#4fc256abae0cb5f10e7c41f28c11b3ff330d72a9"
@@ -6225,6 +6230,11 @@ react-native-reanimated@^2.2.0:
     fbjs "^3.0.0"
     mockdate "^3.0.2"
     string-hash-64 "^1.0.3"
+
+react-native-restart@^0.0.22:
+  version "0.0.22"
+  resolved "https://registry.nlark.com/react-native-restart/download/react-native-restart-0.0.22.tgz#81fcb7f31e35951d85410c68b9556acf3ab88705"
+  integrity sha1-gfy38x41lR2FQQxouVVqzzq4hwU=
 
 react-native-rsa-native@^2.0.3:
   version "2.0.3"
