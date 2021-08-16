@@ -36,7 +36,6 @@ self.onmessage = (message) => {
   var decryptedText = aesjs.utils.utf8.fromBytes(decryptedBytes);
 // "Text may be any length you wish, no padding is required."
 
-
   self.postMessage(JSON.stringify({md5: Md5.hex_md5("123456"), encryptedHex: encryptedHex, decryptedText: decryptedText}));
 
 }

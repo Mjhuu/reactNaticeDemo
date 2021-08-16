@@ -8,6 +8,15 @@ import {name as appName} from './app.json';
 
 import RNRestart from 'react-native-restart';
 import {setJSExceptionHandler, setNativeExceptionHandler} from 'react-native-exception-handler';
+import PushNotification from 'react-native-push-notification';
+
+
+PushNotification.createChannel({
+    channelId: "icloud_download", // (required)
+    channelName: "icloud_download", // (required)
+  },
+  (created) => console.log(`CreateChannel returned '${created}'`)
+);
 
 const errorHandler = (e, isFatal) => {
   if (isFatal) {
