@@ -47,8 +47,8 @@ const Home = (props: { navigation: any }) => {
     }
     const otherDo = async () => {
             // start a new react native JS process
-            const thread = new Thread('thread/index.js');
-            // const thread = new Thread('../src/thread/index.js');
+            // const thread = new Thread('thread/index.js');
+            const thread = new Thread('../src/thread/index.js');
 
 // send a message, strings only
             thread.postMessage('hello from main');
