@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useSelector, useDispatch} from 'react-redux';
-import {SafeAreaView, ScrollView, Text, View, TouchableOpacity} from 'react-native';
-import { Button, Icon, Provider } from "@ant-design/react-native";
+import {SafeAreaView, ScrollView, Text, View, TouchableOpacity, } from 'react-native';
+import { Button, Icon, Provider, Toast } from "@ant-design/react-native";
 import RNFS from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
 // @ts-ignore
@@ -13,6 +13,8 @@ import { RSAUtil } from "../src/common/rsa";
 
 // @ts-ignore
 import RNRestart from 'react-native-restart';
+import NotifyService from "../src/common/NotifService";
+import storage from "../src/common/storage";
 
 const Home = (props: { navigation: any }) => {
     const userInfo = useSelector((state: any) => state.userInfo);
@@ -21,7 +23,16 @@ const Home = (props: { navigation: any }) => {
         decryptedText: ''})
     const [pubPriInfo, setPubPriInfo] = useState({private: '',
         public: '',})
-    const [error, setError] = useState()
+    const [error, setError] = useState();
+
+    const notify = new NotifyService((token: any) => {
+      console.log({ token });
+    }, (notify: any) => {
+      console.log({ notify });
+      if(notify.channelId === 'icloud_download'){
+        Toast.success('通过，系统通知 点进来的')
+      }
+    });
 
     const fetchInfo = async () => {
         let res = await getWxInfo();
@@ -36,8 +47,8 @@ const Home = (props: { navigation: any }) => {
     }
     const otherDo = async () => {
             // start a new react native JS process
-            // const thread = new Thread('thread/index.js');
-            const thread = new Thread('../src/thread/index.js');
+            const thread = new Thread('thread/index.js');
+            // const thread = new Thread('../src/thread/index.js');
 
 // send a message, strings only
             thread.postMessage('hello from main');
@@ -61,7 +72,7 @@ const Home = (props: { navigation: any }) => {
                 // type: [DocumentPicker.types.images],
             });
             RNFetchBlob.fs.readStream(res[0].uri, 'ascii', 4069)
-                .then((stream) => {
+                .then((stream: any) => {
                     let data: Array<number> = []
                     stream.open()
                     stream.onData((chunk: Array<number>) => {
@@ -70,7 +81,7 @@ const Home = (props: { navigation: any }) => {
 
                         data.push(...chunk)
                     })
-                    stream.onError(err => {
+                    stream.onError((err: Error) => {
                         console.log(err);
                     })
                     stream.onEnd(() => {
@@ -87,7 +98,7 @@ const Home = (props: { navigation: any }) => {
                                         'ascii',
                                         // should data append to existing content ?
                                         true)
-                                        .then((ofstream) => {
+                                        .then((ofstream: any) => {
                                             ofstream.write(data)
                                             ofstream.close()
                                             console.log(RNFS.DownloadDirectoryPath + '/test.text');
@@ -100,7 +111,7 @@ const Home = (props: { navigation: any }) => {
                                     'ascii',
                                     // should data append to existing content ?
                                     true)
-                                    .then((ofstream) => {
+                                    .then((ofstream: any) => {
                                         ofstream.write(data)
                                         ofstream.close()
                                         console.log(RNFS.DownloadDirectoryPath + '/test.text');
@@ -110,7 +121,7 @@ const Home = (props: { navigation: any }) => {
                               /**/
                           })
                     })
-                }).catch(err => {
+                }).catch((err: Error) => {
                 console.log(err);
             })
         } catch (err) {
@@ -122,10 +133,20 @@ const Home = (props: { navigation: any }) => {
         }
     }
 
+    const push = () => {
+      setTimeout(() => {
+        notify.localNotify({
+          channelId: 'icloud_download',
+          title: '下载通知',
+          message: 'xxx文件下载成功。'
+        })
+      }, 3000)
+    }
+
     return <Provider>
         <SafeAreaView>
             <ScrollView>
-                <View>
+              <View>
                     <Text>
                         {userInfo.username}
                     </Text>
@@ -144,6 +165,28 @@ const Home = (props: { navigation: any }) => {
                     <Button onPress={fetchInfo}>获取数据</Button>
                     <Button onPress={openFile}>选择文件</Button>
                     <Button onPress={pubPri}>公私钥</Button>
+                    <Button onPress={push}>本地推送</Button>
+                    <Button onPress={() => {
+                      storage.save({
+                        key: 'token',
+                        data: {
+                          token: "我是token"
+                        }
+                      }).then(d => {
+                        Toast.success('设置成功')
+                      })
+                    }}>设置缓存</Button>
+                    <Button onPress={() => {
+                      storage
+                        .load({
+                          key: 'token'
+                        }).then(data => {
+                        console.log({ data });
+                        Toast.success(`缓存token：${data.token}`)
+                      }).catch(err => {
+                        console.log({ err });
+                      })
+                    }}>获取缓存</Button>
                     <Button onPress={() => RNRestart.Restart()}>重启应用</Button>
 
                     <Text>
