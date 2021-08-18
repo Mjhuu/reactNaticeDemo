@@ -48,6 +48,18 @@ import word from '../../assets/icons/word.svg'
 import xml from '../../assets/icons/xml.svg'
 // @ts-ignore
 import zip from '../../assets/icons/zip.svg'
+// @ts-ignore
+import otherFile from '../../assets/icons/otherFile.svg'
+// @ts-ignore
+import documentFile from '../../assets/icons/documentFile.svg'
+// @ts-ignore
+import audioFile from '../../assets/icons/audioFile.svg'
+// @ts-ignore
+import videoFile from '../../assets/icons/videoFile.svg'
+// @ts-ignore
+import imageFile from '../../assets/icons/imageFile.svg'
+// @ts-ignore
+import uploadAdd from '../../assets/icons/uploadAdd.svg'
 
 export const CloudFile = cloudFile;
 export const Css = css;
@@ -74,3 +86,9 @@ export const Video = video;
 export const Word = word;
 export const Xml = xml;
 export const Zip = zip;
+export const OtherFile = otherFile;
+export const DocumentFile = documentFile;
+export const AudioFile = audioFile;
+export const VideoFile = videoFile;
+export const ImageFile = imageFile;
+export const UploadAdd = uploadAdd;

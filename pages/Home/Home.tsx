@@ -1,225 +1,133 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { SafeAreaView, ScrollView, Text, View, TouchableOpacity } from "react-native";
-import { Button, Icon, Provider, Toast } from "@ant-design/react-native";
-import RNFS from "react-native-fs";
-import DocumentPicker from "react-native-document-picker";
-// @ts-ignore
-import RNFetchBlob from "react-native-fetch-blob";
-import { getWxInfo, uploadFile } from "../../src/Api";
-// @ts-ignore
-import { Thread } from "react-native-threads";
-import { RSAUtil } from "../../src/common/rsa";
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  useWindowDimensions,
+  TouchableWithoutFeedback,
+  Animated,
+  Easing
+} from "react-native";
+import { Button, Icon, Provider, Toast, ActionSheet } from "@ant-design/react-native";
+import Empty from "../../src/components/Empty/Empty";
+import styles from "./css";
+import { DocumentFile, ImageFile, OtherFile, VideoFile, AudioFile, UploadAdd } from "../../src/components/Svg";
+import { kindInterface, kindListType, StateInterface } from "../../src/interface";
+import {useAnimate} from "../../src/Hooks/useAnimate"
 
-// @ts-ignore
-import RNRestart from "react-native-restart";
-import NotifyService from "../../src/common/NotifService";
-import storage from "../../src/common/storage";
-
-import {LocalFolder} from '../../src/components/Svg'
-
-const Home = (props: { navigation: any }) => {
+const Home = () => {
   const userInfo = useSelector((state: any) => state.userInfo);
-  const [md5Info, setMd5Info] = useState({
-    md5: "",
-    encryptedHex: "",
-    decryptedText: ""
-  });
-  const [pubPriInfo, setPubPriInfo] = useState({
-    private: "",
-    public: ""
-  });
-  const [error, setError] = useState();
 
-  const notify = new NotifyService((token: any) => {
-    console.log({ token });
-  }, (notify: any) => {
-    console.log({ notify });
-    if (notify.channelId === "icloud_download") {
-      Toast.success("通过，系统通知 点进来的");
-    }
-  });
+  const tabBarShow = useSelector((state: any) => state.tabBarShow);
 
-  const fetchInfo = async () => {
-    let res = await getWxInfo();
-    console.log(res);
+  const dispatch = useDispatch();
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
+
+  const gotoPath = (item: kindInterface) => {
+    console.log(item);
   };
-  const pubPri = async () => {
-    RSAUtil.getRSAKeyPair().then(d => {
-      console.log(d);
-      setPubPriInfo(d);
+
+  // 选择
+  const selectUpload = () => {
+    // setTabBarShow(false)
+    dispatch({
+      type: "SET_TAB_BAR_SHOW",
+      tabBarShow: false
     });
 
   };
-  const otherDo = async () => {
-    // start a new react native JS process
-    const thread = new Thread('thread/index.js');
-    // const thread = new Thread("../src/thread/index.js");
 
-// send a message, strings only
-    thread.postMessage("hello from main");
 
-// listen for messages
-    thread.onmessage = (message: any) => {
-      console.log(JSON.parse(message));
-      setMd5Info(JSON.parse(message));
-      // thread.terminate();
-    };
-
-// stop the JS process
-//         thread.terminate();
-  };
-
-  const openFile = async () => {
-    console.log(RNFS.DocumentDirectoryPath);
-    console.log(RNFS.DownloadDirectoryPath);
-    try {
-      const res: any = await DocumentPicker.pick({
-        // type: [DocumentPicker.types.images],
-      });
-      RNFetchBlob.fs.readStream(res[0].uri, "ascii", 4069)
-        .then((stream: any) => {
-          let data: Array<number> = [];
-          stream.open();
-          stream.onData((chunk: Array<number>) => {
-            chunk = chunk.map((i: number) => i < 0 ? i + 256 : i);
-            console.log({ chunk });
-
-            data.push(...chunk);
-          });
-          stream.onError((err: Error) => {
-            console.log(err);
-          });
-          stream.onEnd(() => {
-            console.log(data.length);
-            console.log(res[0].size);
-            let path = RNFS.DownloadDirectoryPath + "/test.png";
-            RNFetchBlob.fs.exists(path)
-              .then((exist: boolean) => {
-                if (!exist) {
-                  RNFetchBlob.fs.createFile(path, [], "ascii").then(() => {
-                    RNFetchBlob.fs.writeStream(
-                      RNFS.DownloadDirectoryPath + "/test.png",
-                      // encoding, should be one of `base64`, `utf8`, `ascii`
-                      "ascii",
-                      // should data append to existing content ?
-                      true)
-                      .then((ofstream: any) => {
-                        ofstream.write(data);
-                        ofstream.close();
-                        console.log(RNFS.DownloadDirectoryPath + "/test.text");
-                      });
-                  });
-                } else {
-                  RNFetchBlob.fs.writeStream(
-                    RNFS.DownloadDirectoryPath + "/test.png",
-                    // encoding, should be one of `base64`, `utf8`, `ascii`
-                    "ascii",
-                    // should data append to existing content ?
-                    true)
-                    .then((ofstream: any) => {
-                      ofstream.write(data);
-                      ofstream.close();
-                      console.log(RNFS.DownloadDirectoryPath + "/test.text");
-                    });
-                }
-
-                /**/
-              });
-          });
-        }).catch((err: Error) => {
-        console.log(err);
-      });
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        // User cancelled the picker, exit any dialogs or menus and move on
-      } else {
-        throw err;
-      }
-    }
-  };
-
-  const push = () => {
-    setTimeout(() => {
-      notify.localNotify({
-        channelId: "icloud_download",
-        title: "下载通知",
-        message: "xxx文件下载成功。"
-      });
-    }, 3000);
-  };
-
+  const KindList: kindListType = [
+    { title: "视频", svg: <VideoFile width={50} height={40} />, path: "/videoFile" },
+    { title: "图片", svg: <ImageFile width={50} height={40} />, path: "/imageFile" },
+    { title: "文档", svg: <DocumentFile width={50} height={40} />, path: "/documentFile" },
+    { title: "音频", svg: <AudioFile width={50} height={40} />, path: "/audioFile" },
+    { title: "其他", svg: <OtherFile width={50} height={40} />, path: "/otherFile" }
+  ];
 
   return <Provider>
     <SafeAreaView>
-      <ScrollView>
-        <View style={{backgroundColor: '#ff5542'}}>
-          <LocalFolder width={60} height={60} />
+      <View
+        style={{ ...styles.header, ...styles.displayFlex, ...styles.alignItemsCenter, ...styles.flexDirectionRow, ...styles.justifyContentBetween }}>
+        <TouchableOpacity activeOpacity={0.6}>
 
-          <Text style={{ fontFamily: "weblink", color: "#FFF" }}>{"\ue958"}</Text>
-          <Text>
-            {userInfo.username}
-          </Text>
-          <Text>
-            Md5：{md5Info.md5}
-          </Text>
-          <Text>
-            encryptedHex：{md5Info.encryptedHex}
-          </Text>
-          <Text>
-            decryptedText：{md5Info.decryptedText}
-          </Text>
+          <View
+            style={{ ...styles.search, ...styles.displayFlex, ...styles.alignItemsCenter, ...styles.flexDirectionRow }}>
+            <Icon name={"search"} />
+            <Text style={{ ...styles.colorGray }}>
+              搜索文件
+            </Text>
 
-          <Icon name="alibaba" size="md" color="white" />
-          <Button type={"primary"} onPress={otherDo}>其他线程去做</Button>
-          <Button onPress={fetchInfo}>获取数据</Button>
-          <Button onPress={openFile}>选择文件</Button>
-          <Button onPress={pubPri}>公私钥</Button>
-          <Button onPress={push}>本地推送</Button>
-          <Button onPress={() => {
-            storage.save({
-              key: "token",
-              data: {
-                token: "我是token"
-              }
-            }).then(d => {
-              Toast.success("设置成功");
-            });
-          }}>设置缓存</Button>
-          <Button onPress={() => {
-            storage
-              .load({
-                key: "token"
-              }).then(data => {
-              console.log({ data });
-              Toast.success(`缓存token：${data.token}`);
-            }).catch(err => {
-              console.log({ err });
-            });
-          }}>获取缓存</Button>
-          <Button onPress={() => RNRestart.Restart()}>重启应用</Button>
+          </View>
+        </TouchableOpacity>
 
-          <Text>
-            public：{pubPriInfo.public}
-          </Text>
-          <Text>
-            private：{pubPriInfo.private}
-          </Text>
-        </View>
-        <View>
-          <Text>
-            error：{error}
-          </Text>
-        </View>
-        <View>
-          <Text>
-            <TouchableOpacity onPress={() => props.navigation.navigate("Login")}>
-              <Text>跳转登陆</Text>
+        <View
+          style={{ ...styles.navTool, ...styles.displayFlex, ...styles.alignItemsCenter, ...styles.flexDirectionRow }}>
+          <View style={{ ...styles.navItem }}>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Icon size={25} color={"#000"} name={"cloud-upload"} />
             </TouchableOpacity>
-          </Text>
+          </View>
+          <View style={{ ...styles.navItem }}>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Icon size={25} color={"#000"} name={"cloud-download"} />
+            </TouchableOpacity>
+          </View>
+          <View style={{ ...styles.navItem }}>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Icon size={25} color={"#000"} name={"scan"} />
+            </TouchableOpacity>
+          </View>
         </View>
+      </View>
+      <ScrollView style={{ ...styles.padding10, zIndex: -2 }}>
+        {/*快捷分类*/}
+        <View style={{ ...styles.displayFlex, ...styles.flexDirectionRow, ...styles.kindList }}>
+          {
+            KindList.map(i => <TouchableOpacity key={i.path} activeOpacity={0.8} onPress={() => gotoPath(i)}>
+              <View style={{ width: (windowWidth - styles.padding10.padding * 2) / 5, ...styles.kindItem }}>
+                {
+                  i.svg
+                }
+                <Text style={{ marginTop: 5, fontWeight: "bold" }}>
+                  {i.title}
+                </Text>
+              </View>
+            </TouchableOpacity>)
+          }
+        </View>
+        <View style={{ ...styles.backgroundColorWhite, ...styles.padding10, ...styles.borderRadius10 }}>
+          {/*我的资源*/}
+          <View style={{ ...styles.displayFlex, ...styles.flexDirectionRow, alignItems: "flex-end" }}>
+            <Text style={{ fontSize: 18 }}>我的资源</Text>
+            <Text style={{ fontSize: 15, color: "#888", paddingBottom: 2 }}>（已加载47）</Text>
+          </View>
+
+          {/*空数据*/}
+          <Empty />
+          <Empty />
+          <Empty />
+        </View>
+        <View style={{
+          paddingBottom: styles.header.height + styles.padding10.padding
+        }} />
       </ScrollView>
+
+
+
     </SafeAreaView>
+    {/*上传*/}
+    <TouchableOpacity style={{ ...styles.uploadFileButton, bottom: 80 + (tabBarShow ? 0 : 49) }} activeOpacity={0.6}
+                      onPress={() => selectUpload()}>
+      <View>
+        <UploadAdd width={50} height={50} />
+      </View>
+    </TouchableOpacity>
   </Provider>;
 };
 
