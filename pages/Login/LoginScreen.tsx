@@ -11,7 +11,9 @@ const Login = (props: { navigation: any }) => {
         <ScrollView>
             <View style={{height: 300, backgroundColor: 'blue'}}>
                 <Text>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('云盘')}>
+                    <TouchableOpacity onPress={() => {
+                        props.navigation.navigate("云盘");
+                    }}>
                         <Text style={{color: "#fff"}}>22222跳转首页????</Text>
                     </TouchableOpacity>
                 </Text>

@@ -83,10 +83,17 @@ export default StyleSheet.create({
     top: 0,
   },
   actionBox: {
-    left: 0,
-    height: 100,
+    left: 10,
+    height: 130 * 1,
     backgroundColor:"#fff",
-    alignItems:"center",
-    justifyContent:"space-between",
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: 'row',
+    justifyContent: "flex-start",
+    borderRadius: 10,
+    padding: 10,
+  },
+  actionItem: {
+    padding: 10,
   }
 })

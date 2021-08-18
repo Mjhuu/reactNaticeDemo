@@ -8,5 +8,6 @@ export type kindListType = Array<kindInterface>
 
 export interface StateInterface {
   userInfo: object,
-  tabBarShow: boolean
+  tabBarShow: boolean,
+  loginState: boolean,
 }

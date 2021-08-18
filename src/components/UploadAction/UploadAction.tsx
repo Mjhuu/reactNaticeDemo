@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { Animated, Easing, Text, TouchableWithoutFeedback, useWindowDimensions, View } from "react-native";
+import { Animated, Easing, Text, TouchableWithoutFeedback, useWindowDimensions, View, TouchableNativeFeedback } from "react-native";
 import styles from "../../../pages/Home/css";
 import { useDispatch, useSelector } from "react-redux";
 import { useAnimate } from "../../Hooks/useAnimate";
+import {AddFile, AddFolder} from "../Svg";
 
 const UploadAction = () => {
 
@@ -105,15 +106,23 @@ const UploadAction = () => {
           {
             translateY: offset.interpolate({
               inputRange: [0, 1],
-              outputRange: [windowHeight, (windowHeight - 100 - 10)]
+              outputRange: [windowHeight, (windowHeight - styles.actionBox.height - 10)]
             })
           }
         ]
       }]}>
-        <Text>
-          我是操作内容
-          我是操作内容
-        </Text>
+        <TouchableNativeFeedback>
+          <View style={{...styles.actionItem, ...styles.displayFlex, width: (windowWidth - 40) / 3, ...styles.alignItemsCenter}}>
+            <AddFile width={70} height={70} />
+            <Text style={{fontWeight: "bold"}}>上传文件</Text>
+          </View>
+        </TouchableNativeFeedback>
+        <TouchableNativeFeedback>
+          <View style={{...styles.actionItem, ...styles.displayFlex, width: (windowWidth - 40) / 3, ...styles.alignItemsCenter}}>
+            <AddFolder width={70} height={70} />
+            <Text style={{fontWeight: "bold"}}>新建文件夹</Text>
+          </View>
+        </TouchableNativeFeedback>
       </Animated.View>
     </View> : <View />
 }

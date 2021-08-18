@@ -60,6 +60,10 @@ import videoFile from '../../assets/icons/videoFile.svg'
 import imageFile from '../../assets/icons/imageFile.svg'
 // @ts-ignore
 import uploadAdd from '../../assets/icons/uploadAdd.svg'
+// @ts-ignore
+import addFile from '../../assets/icons/addFile.svg'
+// @ts-ignore
+import addFolder from '../../assets/icons/addFolder.svg'
 
 export const CloudFile = cloudFile;
 export const Css = css;
@@ -92,3 +96,5 @@ export const AudioFile = audioFile;
 export const VideoFile = videoFile;
 export const ImageFile = imageFile;
 export const UploadAdd = uploadAdd;
+export const AddFile = addFile;
+export const AddFolder = addFolder;

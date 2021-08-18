@@ -1,5 +1,5 @@
 import * as constants from './actionTypes'
-import { SET_TAB_BAR_SHOW } from "./actionTypes";
+import { SET_PROP, SET_TAB_BAR_SHOW } from "./actionTypes";
 
 //获取用户信息
 export const setUserInfo = (obj) => ({
@@ -9,4 +9,9 @@ export const setUserInfo = (obj) => ({
 export const setTabBarShow = (tabBarShow) => ({
     type: constants.SET_TAB_BAR_SHOW,
     tabBarShow
+});
+export const setProp = (prop, value) => ({
+    type: constants.SET_PROP,
+    prop,
+    value
 });
