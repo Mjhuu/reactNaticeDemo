@@ -10,4 +10,8 @@ export interface StateInterface {
   userInfo: object,
   tabBarShow: boolean,
   loginState: boolean,
+  keypair: {
+    publicKey: string,
+    privateKey: string,
+  },
 }

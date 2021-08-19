@@ -23,20 +23,25 @@ const Tab = createBottomTabNavigator();
 const NavPage = () => {
   const tabBarShow = useSelector((state: StateInterface) => state.tabBarShow);
   const loginState = useSelector((state: StateInterface) => state.loginState);
+  const propKeypair = useSelector((state: StateInterface) => state.keypair);
   const dispatch = useDispatch();
 
   useEffect(() => {
     // 判断是否登录
     isLogin()
-  })
+  }, [])
   async function fetchUserInfo() {
-    let keypair = await RSAUtil.getRSAKeyPair();
-    console.log(keypair);
-    dispatch({
-      type: SET_PROP,
-      prop: 'keypair',
-      value: keypair
-    });
+    let keypair = propKeypair;
+    if(!propKeypair.publicKey){
+      keypair = await RSAUtil.getRSAKeyPair();
+      console.log(keypair);
+      dispatch({
+        type: SET_PROP,
+        prop: 'keypair',
+        value: keypair
+      });
+    }
+
     let res = await getUserInfo({
       publicKey: keypair.publicKey
     });
