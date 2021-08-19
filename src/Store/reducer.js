@@ -8,6 +8,8 @@ const defaultState = {
     userInfo: {},
     tabBarShow: true,
     loginState: true, // 默认为已登录
+    // 解密用户密钥的密钥对
+    keypair: {},
 };
 
 export default (state = defaultState, action) =>{

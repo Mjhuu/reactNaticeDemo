@@ -95,5 +95,11 @@ export default StyleSheet.create({
   },
   actionItem: {
     padding: 10,
+  },
+  fileList: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 20,
   }
 })

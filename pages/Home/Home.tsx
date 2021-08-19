@@ -18,6 +18,7 @@ import { DocumentFile, ImageFile, OtherFile, VideoFile, AudioFile, UploadAdd } f
 import { kindInterface, kindListType, StateInterface } from "../../src/interface";
 import {useAnimate} from "../../src/Hooks/useAnimate"
 import * as Animatable from 'react-native-animatable';
+import FileItem from "../../src/components/FileItem/FileItem";
 
 const Home = () => {
   const userInfo = useSelector((state: any) => state.userInfo);
@@ -109,8 +110,12 @@ const Home = () => {
             <Text style={{ fontSize: 15, color: "#888", paddingBottom: 2 }}>（已加载47）</Text>
           </View>
           {/*空数据*/}
-          <Empty />
-          <Empty />
+          <View style={{...styles.fileList}}>
+            <FileItem width={(windowWidth - 40) / 3} />
+            <FileItem width={(windowWidth - 40) / 3} />
+            <FileItem width={(windowWidth - 40) / 3} />
+            <FileItem width={(windowWidth - 40) / 3} />
+          </View>
           <Empty />
         </View>
         <View style={{

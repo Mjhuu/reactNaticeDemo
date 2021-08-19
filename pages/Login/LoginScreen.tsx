@@ -15,6 +15,7 @@ import styles from "./css/index"
 import { CAPTCHA_URL, userLogin } from "../../src/Api";
 import { check_name, check_pass } from "../../src/common";
 import { setCathe } from "../../src/common/config";
+import { SET_PROP, SET_USER_INFO } from "../../src/Store/actionTypes";
 
 const Login = (props: { navigation: any }) => {
 
@@ -47,9 +48,13 @@ const Login = (props: { navigation: any }) => {
                 console.log(res.data);
                 await setCathe('token', res.data.token);
                 dispatch({
-                    type: 'SET_PROP',
+                    type: SET_PROP,
                     prop: 'loginState',
                     value: true
+                });
+                dispatch({
+                    type: SET_USER_INFO,
+                    userInfo: res.data.userInfo
                 })
                 // await this.props.setUserInfo(res.data.userInfo);
                 /*切换到主界面*/

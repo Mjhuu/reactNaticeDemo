@@ -12,7 +12,10 @@ export const RSAUtil = {
      */
     getRSAKeyPair: async function () {
         let keys = await RSA.generateKeys(4096);
-        return keys
+        return {
+            publicKey: keys.public,
+            privateKey: keys.private
+        }
     },
 
     /**

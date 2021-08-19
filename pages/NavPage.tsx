@@ -10,7 +10,11 @@ import Login from "./Login/LoginScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StateInterface } from "../src/interface";
-import { getCathe } from "../src/common/config";
+import { delCathe, getCathe } from "../src/common/config";
+import { RSAUtil } from "../src/common/rsa";
+import { SET_PROP, SET_USER_INFO } from "../src/Store/actionTypes";
+import { getUserInfo } from "../src/Api";
+import { Toast } from "@ant-design/react-native";
 
 const Stack = createStackNavigator();
 
@@ -25,11 +29,44 @@ const NavPage = () => {
     // 判断是否登录
     isLogin()
   })
+  async function fetchUserInfo() {
+    let keypair = await RSAUtil.getRSAKeyPair();
+    console.log(keypair);
+    dispatch({
+      type: SET_PROP,
+      prop: 'keypair',
+      value: keypair
+    });
+    let res = await getUserInfo({
+      publicKey: keypair.publicKey
+    });
+    console.log(res);
+    if (res.code === 200) {
+      dispatch({
+        type: SET_USER_INFO,
+        userInfo: res.data
+      })
+
+    } else {
+      Toast.fail(res.msg);
+      await delCathe('token');
+      dispatch({
+        type: SET_USER_INFO,
+        userInfo: {}
+      });
+      dispatch({
+        type: 'SET_PROP',
+        prop: 'loginState',
+        value: false
+      })
+    }
+  }
 
   function isLogin() {
     getCathe('token').then(data => {
       console.log(data);
       if(data){
+        fetchUserInfo();
         dispatch({
           type: 'SET_PROP',
           prop: 'loginState',

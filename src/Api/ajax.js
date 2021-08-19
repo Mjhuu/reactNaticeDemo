@@ -1,15 +1,40 @@
 import axios from 'axios'
 import Qs from 'qs'
 import {Toast} from "@ant-design/react-native";
+import { getCathe } from "../common/config";
+let errCount = 0;
+// 存放正在请求的http
+const pendingRequest = new Map();
 
-export default function ajax({url = '', params = {}, type = 'GET', contentType = 'form', cb, onProgress, timeout = 1000 * 15}) {
+// 存放取消函数
+function insertCancelFunc(requestKey, cancel) {
+  if(!pendingRequest.has(requestKey)){
+    pendingRequest.set(requestKey, cancel);
+  }
+}
+// 检查是否存在重复请求，若存在则取消已发的请求。
+function removePendingRequest(requestKey) {
+  if (pendingRequest.has(requestKey)) {
+    const cancelToken = pendingRequest.get(requestKey);
+    cancelToken();
+    return pendingRequest.delete(requestKey);
+  }
+}
+
+
+export default async function ajax({url = '', params = {}, type = 'GET', contentType = 'form', cb, onProgress, timeout = 1000 * 15}) {
   const CancelToken = axios.CancelToken;
+  if(await getCathe('token')){
+    axios.defaults.headers.common['Token'] = await getCathe('token');
+  }
   axios.defaults.withCredentials = true;
 
   // 1. 定义promise对象
   let promise;
+  const key = `${url}${JSON.stringify(params)}${type}${contentType}`;
+  removePendingRequest(key);
+
   return new Promise((resolve, reject) => {
-    axios.defaults.headers.common['referer'] = 'https://servicewechat.com/wx2efdadeb0747c17a';
     // 2. 判断请求的方式
     if ('GET' === type.toUpperCase()) {
       // 2.1 拼接请求字符串
@@ -27,6 +52,7 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
       promise = axios.get(url, {
         timeout,
         cancelToken: new CancelToken(function executor(c) {
+          insertCancelFunc(key, c);
           cb && cb(c);
         })
       })
@@ -36,6 +62,7 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           timeout,
           cancelToken: new CancelToken(function executor(c) {
+            insertCancelFunc(key, c);
             cb && cb(c);
           })
         })
@@ -44,6 +71,7 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
           headers: {'Content-Type': 'application/json'},
           timeout,
           cancelToken: new CancelToken(function executor(c) {
+            insertCancelFunc(key, c);
             cb && cb(c);
           })
         })
@@ -55,6 +83,7 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
             onProgress && onProgress(persent)
           },
           cancelToken: new CancelToken(function executor(c) {
+            insertCancelFunc(key, c);
             cb && cb(c);
           })
         })
@@ -62,6 +91,7 @@ export default function ajax({url = '', params = {}, type = 'GET', contentType =
         promise = axios[type.toLowerCase()](url, params, {
           timeout,
           cancelToken: new CancelToken(function executor(c) {
+            insertCancelFunc(key, c);
             cb && cb(c);
           })
         })
