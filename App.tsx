@@ -17,11 +17,6 @@ import UploadAction from "./src/components/UploadAction/UploadAction";
 const App = () => {
   const isDarkMode = useColorScheme() === "dark";
 
-  const [selectedTab, setSelectedTab] = useState("home");
-
-  const windowWidth = useWindowDimensions().width;
-  const windowHeight = useWindowDimensions().height;
-
   useEffect(() => {
     SplashScreen.hide();
   });
@@ -34,19 +29,6 @@ const App = () => {
 
     </NavigationContainer>
   </Provider>;
-
-  // @ts-ignore
-  /* return (
-       <NavigationContainer>
-           <Stack.Navigator
-               initialRouteName={'Home'}
-           >
-               <Stack.Screen name="Home" component={Home}
-               />
-               <Stack.Screen name="Login" component={Login} />
-           </Stack.Navigator>
-       </NavigationContainer>
-   );*/
 };
 
 export default App;

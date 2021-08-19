@@ -75,7 +75,7 @@ export default StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 50 / 2,
-    zIndex: -1
+    zIndex: 1
   },
   maskBox: {
     position: "absolute",

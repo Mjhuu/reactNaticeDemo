@@ -1,9 +1,10 @@
-
 /**
  * 检查姓名
  * @param val
  * @returns {boolean}
  */
+import { fileType } from "../Data";
+
 export function check_name(val) {
   return (/^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_])+$/.test(val));
 }
@@ -37,4 +38,3 @@ export function check_pass(val) {
   }
   return value_length >= 6 && value_length <= 16 && !/\s/.test(value) && code_length >= 2;
 }
-

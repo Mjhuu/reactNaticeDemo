@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   SafeAreaView,
@@ -8,26 +8,50 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   TouchableWithoutFeedback,
-  Animated,
-  Easing
+  RefreshControl
 } from "react-native";
 import { Button, Icon, Provider, Toast, ActionSheet } from "@ant-design/react-native";
 import Empty from "../../src/components/Empty/Empty";
 import styles from "./css";
 import { DocumentFile, ImageFile, OtherFile, VideoFile, AudioFile, UploadAdd } from "../../src/components/Svg";
-import { kindInterface, kindListType, StateInterface } from "../../src/interface";
+import { kindInterface, kindListType, dirFileInterface } from "../../src/interface";
 import {useAnimate} from "../../src/Hooks/useAnimate"
 import * as Animatable from 'react-native-animatable';
 import FileItem from "../../src/components/FileItem/FileItem";
+import { useFile } from "../../src/Hooks/useFile";
+import { getCathe } from "../../src/common/config";
 
-const Home = () => {
-  const userInfo = useSelector((state: any) => state.userInfo);
-
-  const tabBarShow = useSelector((state: any) => state.tabBarShow);
+const Home = ({route, navigation} : any) => {
 
   const dispatch = useDispatch();
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
+
+  const { loading, fetchSearchFolderList, fetchFolderList, dirFileList, selectedRowKeys } = useFile();
+
+  // 首次加载时 请求文件列表
+  useEffect(() => {
+    //
+    console.log(route.params.keyword);
+    console.log(route.params.path);
+    getCathe('token').then(data => {
+      if(data){
+        fetchFolderList({
+          keyword: route.params.keyword || '',
+          path: route.params.path || '/',
+        })
+      }
+    })
+
+  }, [])
+
+  function onRefresh() {
+    console.log("onRefresh");
+    fetchFolderList({
+      keyword: route.params.keyword || '',
+      path: route.params.path || '/',
+    })
+  }
 
   const gotoPath = (item: kindInterface) => {
     console.log(item);
@@ -87,7 +111,12 @@ const Home = () => {
           </View>
         </View>
       </View>
-      <ScrollView style={{ ...styles.padding10, zIndex: -2 }}>
+      <ScrollView
+        style={{ ...styles.padding10, zIndex: -2 }}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={() => onRefresh()} />
+        }
+      >
         {/*快捷分类*/}
         <View style={{ ...styles.displayFlex, ...styles.flexDirectionRow, ...styles.kindList }}>
           {
@@ -107,16 +136,17 @@ const Home = () => {
           {/*我的资源*/}
           <View style={{ ...styles.displayFlex, ...styles.flexDirectionRow, alignItems: "flex-end" }}>
             <Text style={{ fontSize: 18 }}>我的资源</Text>
-            <Text style={{ fontSize: 15, color: "#888", paddingBottom: 2 }}>（已加载47）</Text>
+            <Text style={{ fontSize: 15, color: "#888", paddingBottom: 2 }}>（已加载{dirFileList.length}）</Text>
           </View>
           {/*空数据*/}
           <View style={{...styles.fileList}}>
-            <FileItem width={(windowWidth - 40) / 3} />
-            <FileItem width={(windowWidth - 40) / 3} />
-            <FileItem width={(windowWidth - 40) / 3} />
-            <FileItem width={(windowWidth - 40) / 3} />
+            {
+              dirFileList.map((i: dirFileInterface) => <FileItem key={i.id} fileItem={i} width={(windowWidth - 40) / 3} />)
+            }
           </View>
-          <Empty />
+          {
+            dirFileList.length === 0 && <Empty />
+          }
         </View>
         <View style={{
           paddingBottom: styles.header.height + styles.padding10.padding
@@ -127,7 +157,7 @@ const Home = () => {
 
     </SafeAreaView>
     {/*上传*/}
-    <TouchableOpacity style={{ ...styles.uploadFileButton, bottom: 80 + (tabBarShow ? 0 : 49) }} activeOpacity={0.6}
+    <TouchableOpacity style={{ ...styles.uploadFileButton, bottom: 80}} activeOpacity={0.6}
                       onPress={() => selectUpload()}>
       <View>
         <UploadAdd width={50} height={50} />

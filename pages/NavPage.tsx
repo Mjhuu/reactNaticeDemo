@@ -21,9 +21,7 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const NavPage = () => {
-  const tabBarShow = useSelector((state: StateInterface) => state.tabBarShow);
   const loginState = useSelector((state: StateInterface) => state.loginState);
-  const propKeypair = useSelector((state: StateInterface) => state.keypair);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,16 +29,13 @@ const NavPage = () => {
     isLogin()
   }, [])
   async function fetchUserInfo() {
-    let keypair = propKeypair;
-    if(!propKeypair.publicKey){
-      keypair = await RSAUtil.getRSAKeyPair();
-      console.log(keypair);
-      dispatch({
-        type: SET_PROP,
-        prop: 'keypair',
-        value: keypair
-      });
-    }
+    let keypair = await RSAUtil.getRSAKeyPair();
+    console.log(keypair);
+    dispatch({
+      type: SET_PROP,
+      prop: 'keypair',
+      value: keypair
+    });
 
     let res = await getUserInfo({
       publicKey: keypair.publicKey
@@ -69,14 +64,8 @@ const NavPage = () => {
 
   function isLogin() {
     getCathe('token').then(data => {
-      console.log(data);
       if(data){
         fetchUserInfo();
-        dispatch({
-          type: 'SET_PROP',
-          prop: 'loginState',
-          value: true
-        })
       }else {
         dispatch({
           type: 'SET_PROP',
@@ -135,19 +124,19 @@ const NavPage = () => {
             tabBarInactiveTintColor: "gray",
             tabBarHideOnKeyboard: true,
             tabBarShowLabel: false,
-            tabBarStyle: tabBarShow ? {} : {
-              display: "none",
-            }
           })}
           backBehavior="none"
         >
-          <Tab.Screen name="云盘" component={() => <Home />} options={{
+          <Tab.Screen name="云盘" initialParams={{
+            keyword: '',
+            path: '/'
+          }} component={(props) => <Home {...props} />} options={{
             headerShown: false,
           }} />
-          <Tab.Screen name="分享" component={() => <Share />} options={{
+          <Tab.Screen name="分享" component={(props) => <Share {...props} />} options={{
             headerShown: false
           }} />
-          <Tab.Screen name="我的" component={() => <Mine />} options={{
+          <Tab.Screen name="我的" component={(props) => <Mine {...props} />} options={{
             headerShown: false
           }} />
         </Tab.Navigator>}
