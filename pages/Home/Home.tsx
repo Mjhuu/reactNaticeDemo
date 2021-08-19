@@ -17,6 +17,7 @@ import styles from "./css";
 import { DocumentFile, ImageFile, OtherFile, VideoFile, AudioFile, UploadAdd } from "../../src/components/Svg";
 import { kindInterface, kindListType, StateInterface } from "../../src/interface";
 import {useAnimate} from "../../src/Hooks/useAnimate"
+import * as Animatable from 'react-native-animatable';
 
 const Home = () => {
   const userInfo = useSelector((state: any) => state.userInfo);
@@ -107,7 +108,6 @@ const Home = () => {
             <Text style={{ fontSize: 18 }}>我的资源</Text>
             <Text style={{ fontSize: 15, color: "#888", paddingBottom: 2 }}>（已加载47）</Text>
           </View>
-
           {/*空数据*/}
           <Empty />
           <Empty />
