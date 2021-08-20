@@ -1,16 +1,22 @@
 import * as constants from './actionTypes'
+import { dirFileInterface, StateInterface } from "../interface";
 
 //默认数据
-const defaultState = {
+const defaultState: StateInterface = {
     /*云盘数据*/
     userInfo: {},
     uploadActionShow: false, // 是否显示上传行为
     loginState: true, // 默认为已登录
+    fileDetailShow: false, // 某文件显示详情
+    currentFileDetail: {} as dirFileInterface, // 当前选中的文件详情信息
     // 解密用户密钥的密钥对
-    keypair: {},
+    keypair: {
+        publicKey: '',
+        privateKey: '',
+    },
 };
 
-export default (state = defaultState, action) =>{
+export default (state = defaultState, action: any) =>{
     switch (action.type) {
         case constants.SET_USER_INFO:{
             const newState = {...state};
@@ -24,6 +30,7 @@ export default (state = defaultState, action) =>{
         }
         case constants.SET_PROP:{
             const newState = {...state};
+            // @ts-ignore
             newState[action.prop] = action.value;
             return newState;
         }

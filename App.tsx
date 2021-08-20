@@ -13,6 +13,7 @@ import Badge from "react-native-tab-navigator/Badge";
 import SplashScreen from "react-native-splash-screen";
 import NavPage from "./pages/NavPage";
 import UploadAction from "./src/components/UploadAction/UploadAction";
+import FileDetail from "./src/components/FileDetail/FileDetail";
 
 const App = () => {
   const isDarkMode = useColorScheme() === "dark";
@@ -26,6 +27,7 @@ const App = () => {
 
       <NavPage/>
       <UploadAction />
+      <FileDetail />
 
     </NavigationContainer>
   </Provider>;

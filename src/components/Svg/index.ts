@@ -70,6 +70,16 @@ import more from '../../assets/icons/moreAction.svg'
 import detail from '../../assets/icons/detail.svg'
 // @ts-ignore
 import detailAction from '../../assets/icons/detailAction.svg'
+// @ts-ignore
+import rename from '../../assets/icons/rename.svg'
+// @ts-ignore
+import move from '../../assets/icons/move.svg'
+// @ts-ignore
+import share from '../../assets/icons/share.svg'
+// @ts-ignore
+import download from '../../assets/icons/download.svg'
+// @ts-ignore
+import _delete from '../../assets/icons/delete.svg'
 
 export const CloudFile = cloudFile;
 export const Css = css;
@@ -107,3 +117,9 @@ export const AddFolder = addFolder;
 export const More = more;
 export const Detail = detail;
 export const DetailAction = detailAction;
+
+export const Rename = rename;
+export const Move = move;
+export const Share = share;
+export const DownLoad = download;
+export const Delete = _delete;

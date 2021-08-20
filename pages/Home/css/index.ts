@@ -93,6 +93,48 @@ export default StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
+  fileDetailBox: {
+    left: 10,
+    backgroundColor:"#fff",
+    borderRadius: 10,
+    padding: 10,
+  },
+  fileDetailHeader: {
+    height: 60,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f5f5f5',
+    display: "flex",
+    flexDirection: 'row',
+    alignItems: "center"
+
+  },
+  fileDetailActive: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+
+  },
+  fileDetailActiveItem: {
+    height: 90,
+    borderRadius: 10,
+    overflow: "hidden",
+    margin: 10,
+  },
+  listBox: {
+    backgroundColor: '#f5f5f5',
+    borderRadius: 10,
+    margin: 10,
+    overflow: "hidden",
+  },
+  listItem: {
+    height: 45,
+    borderBottomWidth: .5,
+    borderBottomColor: '#ccc',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
   actionItem: {
     padding: 10,
   },

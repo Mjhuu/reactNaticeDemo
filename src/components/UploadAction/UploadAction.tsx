@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Animated, Easing, Text, TouchableWithoutFeedback, useWindowDimensions, View, TouchableNativeFeedback } from "react-native";
 import styles from "../../../pages/Home/css";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import { useAnimate } from "../../Hooks/useAnimate";
 import {AddFile, AddFolder} from "../Svg";
 import { StateInterface } from "../../interface";
 import { SET_UPLOAD_ACTION_SHOW } from "../../Store/actionTypes";
+import * as Animatable from "react-native-animatable";
 
 const UploadAction = () => {
 
@@ -13,12 +14,9 @@ const UploadAction = () => {
   const uploadActionShow = useSelector((state: StateInterface) => state.uploadActionShow);
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  const [offset] = useAnimate({
-    initialValue:0,
-  })
-  const [opacity] = useAnimate({
-    initialValue:0,
-  })
+
+  const [opacity, setOpacity] = useState(0);
+  const [translateY, setTranslateY] = useState(windowHeight);
 
   useEffect(() => {
 
@@ -28,53 +26,16 @@ const UploadAction = () => {
   }, [uploadActionShow])
 
   function show(){
-    Animated.parallel([
-      Animated.timing(
-        opacity,
-        {
-          useNativeDriver: true,
-          easing: Easing.linear,
-          duration: 150,
-          toValue: 0.8
-        }
-      ),
-      Animated.timing(
-        offset,
-        {
-          useNativeDriver: true,
-          easing: Easing.linear,
-          duration: 150,
-          toValue: 1
-        }
-      )
-    ]).start();
+    setOpacity(0.8);
+    setTranslateY((windowHeight - styles.actionBox.height - 10));
+    dispatch({
+      type: SET_UPLOAD_ACTION_SHOW,
+      uploadActionShow: true
+    });
   }
   const hide = () => {
-    Animated.parallel([
-      Animated.timing(
-        opacity,
-        {
-          useNativeDriver: true,
-          easing: Easing.linear,
-          duration: 150,
-          toValue: 0
-        }
-      ),
-      Animated.timing(
-        offset,
-        {
-          useNativeDriver: true,
-          easing: Easing.linear,
-          duration: 150,
-          toValue: 0
-        }
-      )
-    ]).start(finished => {
-      dispatch({
-        type: SET_UPLOAD_ACTION_SHOW,
-        uploadActionShow: false
-      });
-    });
+    setOpacity(0);
+    setTranslateY(windowHeight);
 
   };
 
@@ -84,32 +45,30 @@ const UploadAction = () => {
       ...styles.maskBox
     }}>
       <TouchableWithoutFeedback onPress={() => {
-        console.log(2);
         hide();
       }}>
-        <Animated.View style={{
+        <Animatable.View useNativeDriver={true} onTransitionEnd={() => {
+          opacity === 0 && dispatch({
+            type: SET_UPLOAD_ACTION_SHOW,
+            uploadActionShow: false
+          });
+        }} transition={"opacity"} style={{
           width: windowWidth,
           height: windowHeight,
           ...styles.maskBox,
           backgroundColor: "rgb(0, 0, 0)",
-          opacity: opacity.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 0.8]
-          })
+          opacity
         }}>
 
-        </Animated.View>
+        </Animatable.View>
       </TouchableWithoutFeedback>
-      <Animated.View style={[{
+      <Animatable.View useNativeDriver={true} transition={"translateY"} style={[{
         width: windowWidth - (10 * 2),
         ...styles.actionBox,
       }, {
         transform: [
           {
-            translateY: offset.interpolate({
-              inputRange: [0, 1],
-              outputRange: [windowHeight, (windowHeight - styles.actionBox.height - 10)]
-            })
+            translateY
           }
         ]
       }]}>
@@ -125,7 +84,7 @@ const UploadAction = () => {
             <Text style={{fontWeight: "bold"}}>新建文件夹</Text>
           </View>
         </TouchableNativeFeedback>
-      </Animated.View>
+      </Animatable.View>
     </View> : <View />
 }
 

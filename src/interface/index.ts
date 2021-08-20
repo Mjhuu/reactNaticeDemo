@@ -11,11 +11,13 @@ export type kindListType = Array<kindInterface>
 export interface StateInterface {
   userInfo: object,
   uploadActionShow: boolean,
+  fileDetailShow: boolean,
   loginState: boolean,
   keypair: {
     publicKey: string,
     privateKey: string,
   },
+  currentFileDetail: dirFileInterface
 }
 
 export interface dirFileInterface {
