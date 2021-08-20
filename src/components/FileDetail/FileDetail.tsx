@@ -111,7 +111,7 @@ const FileDetail = () => {
         </View>
       </View>
       <View style={{height: contentHeight - styles.fileDetailHeader.height - styles.fileDetailHeader.borderBottomWidth - styles.fileDetailBox.padding * 2}}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {/*三个大方块*/}
           <View style={{...styles.fileDetailActive}}>
             {
@@ -119,7 +119,7 @@ const FileDetail = () => {
                 <TouchableNativeFeedback>
                   <View style={{height: 90, backgroundColor: '#f5f5f5', justifyContent: "center", alignItems: 'center'}}>
                     {i.svg}
-                    <Text style={{marginTop: 5}}>{i.title}</Text>
+                    <Text numberOfLines={1} style={{marginTop: 5}}>{i.title}</Text>
                   </View>
                 </TouchableNativeFeedback>
               </View>)
@@ -130,7 +130,7 @@ const FileDetail = () => {
             <View style={{...styles.listItem, borderBottomWidth: 0}}>
               <TouchableNativeFeedback>
                 <View style={{...styles.listItem, borderBottomWidth: 0}}>
-                  <Text style={{paddingLeft: 10}}>下载文件</Text>
+                  <Text numberOfLines={1} style={{paddingLeft: 10}}>下载文件</Text>
                   <View style={{paddingRight: 10}}>
                     <DownLoad width={20} height={20} />
                   </View>
@@ -142,7 +142,7 @@ const FileDetail = () => {
             <View style={{...styles.listItem, borderBottomWidth: 0}}>
               <TouchableNativeFeedback>
                 <View style={{...styles.listItem, borderBottomWidth: 0}}>
-                  <Text style={{paddingLeft: 10, color: "#d81e06"}}>删除</Text>
+                  <Text numberOfLines={1} style={{paddingLeft: 10, color: "#d81e06"}}>删除</Text>
                   <View style={{paddingRight: 10}}>
                     <Delete width={20} height={20} />
                   </View>
@@ -153,19 +153,19 @@ const FileDetail = () => {
           {/*文件信息*/}
           <View style={{...styles.listBox}}>
             <View style={{...styles.listItem}}>
-              <Text style={{paddingLeft: 10}}>文件大小</Text>
-              <Text style={{paddingRight: 10, color: '#333'}}>{
+              <Text numberOfLines={1}style={{paddingLeft: 10}}>文件大小</Text>
+              <Text numberOfLines={1} style={{paddingRight: 10, color: '#333'}}>{
                 fileItem.isNewFolder === 1 ? '-' :
                   fileItem.isDir === 1 ? '-' : dealFileSize(fileItem.size)
               }</Text>
             </View>
             <View style={{...styles.listItem}}>
-              <Text style={{paddingLeft: 10}}>创建时间</Text>
-              <Text style={{paddingRight: 10, color: '#333'}}>{moment(fileItem.createdAt).format('YYYY-MM-DD HH:mm')}</Text>
+              <Text numberOfLines={1} style={{paddingLeft: 10}}>创建时间</Text>
+              <Text numberOfLines={1} style={{paddingRight: 10, color: '#333'}}>{moment(fileItem.createdAt).format('YYYY-MM-DD HH:mm')}</Text>
             </View>
             <View style={{...styles.listItem, borderBottomWidth: 0}}>
-              <Text style={{paddingLeft: 10}}>修改时间</Text>
-              <Text style={{paddingRight: 10, color: '#333'}}>{moment(fileItem.updatedAt).format('YYYY-MM-DD HH:mm')}</Text>
+              <Text numberOfLines={1} style={{paddingLeft: 10}}>修改时间</Text>
+              <Text numberOfLines={1} style={{paddingRight: 10, color: '#333'}}>{moment(fileItem.updatedAt).format('YYYY-MM-DD HH:mm')}</Text>
             </View>
           </View>
         </ScrollView>

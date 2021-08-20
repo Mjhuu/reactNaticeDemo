@@ -8,7 +8,7 @@ import { DetailAction } from "../Svg";
 import { SET_PROP } from "../../Store/actionTypes";
 import { useDispatch } from "react-redux";
 
-const FileItem = (props: {width?: number, fileItem: dirFileInterface}) => {
+const FileItem = (props: {width?: number, fileItem: dirFileInterface, onOpenFolder: (fileItem: dirFileInterface) => void}) => {
   let {fileItem} = props;
   const dispatch = useDispatch();
   const windowWidth = useWindowDimensions().width;
@@ -19,7 +19,12 @@ const FileItem = (props: {width?: number, fileItem: dirFileInterface}) => {
   const Svg = fileItem.isDir === 1 ? fileType.folder : dealFileType(fileName);
 
   const openFile = () => {
-    console.log("打开文件");
+    if(fileItem.isDir === 1){
+      console.log("打开文件夹", fileItem);
+      props.onOpenFolder(fileItem)
+    }else {
+      console.log("打开文件");
+    }
   }
 
   const showDetail = () => {
@@ -40,7 +45,7 @@ const FileItem = (props: {width?: number, fileItem: dirFileInterface}) => {
     <View style={{width: props.width || windowWidth / 3, height: 150, display: 'flex', justifyContent: 'center', alignItems: "center", padding: 6}}>
       <Svg width={70} height={70} />
       <Text numberOfLines={1}>{fileName}</Text>
-      <Text style={{fontSize: 13, color: "#bbb"}}>{moment(fileItem.updatedAt).format('YYYY-MM-DD HH:mm')}</Text>
+      <Text numberOfLines={1} style={{fontSize: 13, color: "#bbb"}}>{moment(fileItem.updatedAt).format('YYYY-MM-DD')}</Text>
       <TouchableWithoutFeedback onPress={_ => showDetail()}>
           <DetailAction width={60} height={30} />
       </TouchableWithoutFeedback>

@@ -34,7 +34,7 @@ export interface dirFileInterface {
   isEmpty: number,
   skey: string,
   type: number,
-  userId: string
+  userId: string,
 }
 
 export interface resInterface {

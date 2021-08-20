@@ -68,6 +68,14 @@ const Home = ({route, navigation} : any) => {
 
   };
 
+  // 打开文件夹
+  function onOpenFolder(fileItem: dirFileInterface) : void{
+    navigation.push('Folder', {
+      fileItem,
+      path: '/' + fileItem.name
+    })
+  }
+
 
   const KindList: kindListType = [
     { title: "视频", svg: <VideoFile width={50} height={40} />, path: "/videoFile" },
@@ -142,7 +150,7 @@ const Home = ({route, navigation} : any) => {
           {/*空数据*/}
           <View style={{...styles.fileList}}>
             {
-              dirFileList.map((i: dirFileInterface) => <FileItem key={i.id} fileItem={i} width={(windowWidth - 40) / 3} />)
+              dirFileList.map((i: dirFileInterface) => <FileItem key={i.id} fileItem={i} width={(windowWidth - 40) / 3} onOpenFolder={(fileItem) => onOpenFolder(fileItem)} />)
             }
           </View>
           {

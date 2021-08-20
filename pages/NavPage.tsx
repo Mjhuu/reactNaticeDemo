@@ -15,6 +15,7 @@ import { RSAUtil } from "../src/common/rsa";
 import { SET_PROP, SET_USER_INFO } from "../src/Store/actionTypes";
 import { getUserInfo } from "../src/Api";
 import { Toast } from "@ant-design/react-native";
+import Folder from "./Folder/Folder";
 
 const Stack = createStackNavigator();
 
@@ -141,6 +142,7 @@ const NavPage = () => {
           }} />
         </Tab.Navigator>}
         />
+        <Stack.Screen options={{}} name="Folder" component={Folder} />
       </> : <>
         <Stack.Screen options={{ headerShown: false, animationTypeForReplace: !loginState ? 'pop' : 'push', }} name="Login" component={Login} />
       </>
