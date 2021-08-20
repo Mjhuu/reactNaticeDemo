@@ -1,3 +1,5 @@
+import UploadAction from "../components/UploadAction/UploadAction";
+
 export interface kindInterface {
   title: string
   svg: Document
@@ -8,7 +10,7 @@ export type kindListType = Array<kindInterface>
 
 export interface StateInterface {
   userInfo: object,
-  tabBarShow: boolean,
+  uploadActionShow: boolean,
   loginState: boolean,
   keypair: {
     publicKey: string,

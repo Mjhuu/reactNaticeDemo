@@ -4,6 +4,7 @@ import moment from "moment";
 import { dealFileType, fileType } from "../../Data";
 import { dirFileInterface } from "../../interface";
 import { useFile } from "../../Hooks/useFile";
+import { DetailAction } from "../Svg";
 
 const FileItem = (props: {width?: number, fileItem: dirFileInterface}) => {
   let {fileItem} = props;
@@ -16,14 +17,14 @@ const FileItem = (props: {width?: number, fileItem: dirFileInterface}) => {
   return <TouchableNativeFeedback onPress={_ => {
     console.log("打开文件");
   }}>
-    <View style={{width: props.width || windowWidth / 3, height: 130, display: 'flex', justifyContent: 'center', alignItems: "center", padding: 6}}>
-      <Svg width={55} height={55} />
+    <View style={{width: props.width || windowWidth / 3, height: 150, display: 'flex', justifyContent: 'center', alignItems: "center", padding: 6}}>
+      <Svg width={70} height={70} />
       <Text numberOfLines={1}>{fileName}</Text>
-      <Text style={{fontSize: 12, color: "#bbb"}}>{moment(fileItem.updatedAt).format('YYYY-MM-DD HH:mm')}</Text>
+      <Text style={{fontSize: 13, color: "#bbb"}}>{moment(fileItem.updatedAt).format('YYYY-MM-DD HH:mm')}</Text>
       <TouchableWithoutFeedback onPress={_ => {
         console.log("更多信息");
       }}>
-        <View style={{width: 30, height: 15, backgroundColor: 'rgba(0, 0, 0, .1)', borderRadius: 15, display: "flex", alignItems: 'center', justifyContent: "center", marginTop: 5}}><Text style={{lineHeight: 15, fontWeight: "bold", color: "#888"}}>···</Text></View>
+          <DetailAction width={60} height={30} />
       </TouchableWithoutFeedback>
     </View>
   </TouchableNativeFeedback>

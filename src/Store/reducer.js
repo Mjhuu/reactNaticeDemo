@@ -1,12 +1,10 @@
 import * as constants from './actionTypes'
-import { setTabBarShow } from "./actionCreators";
-import { SET_PROP } from "./actionTypes";
 
 //默认数据
 const defaultState = {
     /*云盘数据*/
     userInfo: {},
-    tabBarShow: true,
+    uploadActionShow: false, // 是否显示上传行为
     loginState: true, // 默认为已登录
     // 解密用户密钥的密钥对
     keypair: {},
@@ -19,9 +17,9 @@ export default (state = defaultState, action) =>{
             newState.userInfo = action.userInfo;
             return newState;
         }
-        case constants.SET_TAB_BAR_SHOW:{
+        case constants.SET_UPLOAD_ACTION_SHOW:{
             const newState = {...state};
-            newState.tabBarShow = action.tabBarShow;
+            newState.uploadActionShow = action.uploadActionShow;
             return newState;
         }
         case constants.SET_PROP:{

@@ -41,7 +41,7 @@ export default StyleSheet.create({
   },
 //  搜索
   search: {
-    width: 150,
+    width: 200,
     height: 35,
     borderRadius: 10,
     backgroundColor: '#fff',

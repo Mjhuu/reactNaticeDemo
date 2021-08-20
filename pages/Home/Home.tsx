@@ -20,6 +20,7 @@ import * as Animatable from 'react-native-animatable';
 import FileItem from "../../src/components/FileItem/FileItem";
 import { useFile } from "../../src/Hooks/useFile";
 import { getCathe } from "../../src/common/config";
+import { SET_UPLOAD_ACTION_SHOW } from "../../src/Store/actionTypes";
 
 const Home = ({route, navigation} : any) => {
 
@@ -61,8 +62,8 @@ const Home = ({route, navigation} : any) => {
   const selectUpload = () => {
     // setTabBarShow(false)
     dispatch({
-      type: "SET_TAB_BAR_SHOW",
-      tabBarShow: false
+      type: SET_UPLOAD_ACTION_SHOW,
+      uploadActionShow: true
     });
 
   };
@@ -159,7 +160,7 @@ const Home = ({route, navigation} : any) => {
     {/*上传*/}
     <TouchableOpacity style={{ ...styles.uploadFileButton, bottom: 80}} activeOpacity={0.6}
                       onPress={() => selectUpload()}>
-      <View>
+      <View style={{backgroundColor: '#fff', borderRadius: 50, overflow: 'hidden'}}>
         <UploadAdd width={50} height={50} />
       </View>
     </TouchableOpacity>

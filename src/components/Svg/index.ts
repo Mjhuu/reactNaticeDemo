@@ -64,6 +64,12 @@ import uploadAdd from '../../assets/icons/uploadAdd.svg'
 import addFile from '../../assets/icons/addFile.svg'
 // @ts-ignore
 import addFolder from '../../assets/icons/addFolder.svg'
+// @ts-ignore
+import more from '../../assets/icons/moreAction.svg'
+// @ts-ignore
+import detail from '../../assets/icons/detail.svg'
+// @ts-ignore
+import detailAction from '../../assets/icons/detailAction.svg'
 
 export const CloudFile = cloudFile;
 export const Css = css;
@@ -98,3 +104,6 @@ export const ImageFile = imageFile;
 export const UploadAdd = uploadAdd;
 export const AddFile = addFile;
 export const AddFolder = addFolder;
+export const More = more;
+export const Detail = detail;
+export const DetailAction = detailAction;

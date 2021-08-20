@@ -130,13 +130,13 @@ const NavPage = () => {
           <Tab.Screen name="云盘" initialParams={{
             keyword: '',
             path: '/'
-          }} component={(props) => <Home {...props} />} options={{
+          }} component={Home} options={{
             headerShown: false,
           }} />
-          <Tab.Screen name="分享" component={(props) => <Share {...props} />} options={{
+          <Tab.Screen name="分享" component={Share} options={{
             headerShown: false
           }} />
-          <Tab.Screen name="我的" component={(props) => <Mine {...props} />} options={{
+          <Tab.Screen name="我的" component={Mine} options={{
             headerShown: false
           }} />
         </Tab.Navigator>}

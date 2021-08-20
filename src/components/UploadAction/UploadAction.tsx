@@ -4,11 +4,13 @@ import styles from "../../../pages/Home/css";
 import { useDispatch, useSelector } from "react-redux";
 import { useAnimate } from "../../Hooks/useAnimate";
 import {AddFile, AddFolder} from "../Svg";
+import { StateInterface } from "../../interface";
+import { SET_UPLOAD_ACTION_SHOW } from "../../Store/actionTypes";
 
 const UploadAction = () => {
 
   const dispatch = useDispatch();
-  const tabBarShow = useSelector((state: any) => state.tabBarShow);
+  const uploadActionShow = useSelector((state: StateInterface) => state.uploadActionShow);
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   const [offset] = useAnimate({
@@ -20,10 +22,10 @@ const UploadAction = () => {
 
   useEffect(() => {
 
-    if(!tabBarShow){
+    if(uploadActionShow){
       show()
     }
-  }, [tabBarShow])
+  }, [uploadActionShow])
 
   function show(){
     Animated.parallel([
@@ -32,7 +34,7 @@ const UploadAction = () => {
         {
           useNativeDriver: true,
           easing: Easing.linear,
-          duration: 300,
+          duration: 150,
           toValue: 0.8
         }
       ),
@@ -41,7 +43,7 @@ const UploadAction = () => {
         {
           useNativeDriver: true,
           easing: Easing.linear,
-          duration: 300,
+          duration: 150,
           toValue: 1
         }
       )
@@ -54,7 +56,7 @@ const UploadAction = () => {
         {
           useNativeDriver: true,
           easing: Easing.linear,
-          duration: 500,
+          duration: 150,
           toValue: 0
         }
       ),
@@ -63,20 +65,20 @@ const UploadAction = () => {
         {
           useNativeDriver: true,
           easing: Easing.linear,
-          duration: 500,
+          duration: 150,
           toValue: 0
         }
       )
     ]).start(finished => {
       dispatch({
-        type: "SET_TAB_BAR_SHOW",
-        tabBarShow: true
+        type: SET_UPLOAD_ACTION_SHOW,
+        uploadActionShow: false
       });
     });
 
   };
 
-  return !tabBarShow ? <View style={{
+  return uploadActionShow ? <View style={{
       width: windowWidth,
       height: windowHeight,
       ...styles.maskBox
