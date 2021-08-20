@@ -153,7 +153,7 @@ const FileDetail = () => {
           {/*文件信息*/}
           <View style={{...styles.listBox}}>
             <View style={{...styles.listItem}}>
-              <Text numberOfLines={1}style={{paddingLeft: 10}}>文件大小</Text>
+              <Text numberOfLines={1} style={{paddingLeft: 10}}>文件大小</Text>
               <Text numberOfLines={1} style={{paddingRight: 10, color: '#333'}}>{
                 fileItem.isNewFolder === 1 ? '-' :
                   fileItem.isDir === 1 ? '-' : dealFileSize(fileItem.size)
