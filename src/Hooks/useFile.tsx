@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getFolderList, searchFolderList } from "../Api";
+import { getFolderList, searchByType, searchFolderList } from "../Api";
 import { dirFileInterface, resInterface } from "../interface";
 import { Toast } from "@ant-design/react-native";
 import moment from "moment";
@@ -35,6 +35,31 @@ export function useFile(config?: any) {
       Toast.fail(res.msg)
     }
   }
+  async function searchTypeFolderList({ keyword, type }: any) {
+    setLoading(true)
+    let res = await searchByType({
+      type: type,
+      keyword: encodeURIComponent(keyword)
+    });
+    setLoading(false)
+    if (res.code === 200) {
+      let dirFileList = res.data || [];
+      dirFileList.map((i: dirFileInterface) => {
+        i.isNewFolder = 0; // 是否是新建文件夹
+        i.isEdit = 0; // 是否编辑
+        i.editName = i.name; // 编辑的文件名
+        i.isDel = 0; // 是否进行删除操作
+        // @ts-ignore
+        i.updatedAt = new Date(moment(i.updatedAt)).getTime();
+      })
+
+      setDirFileList(dirFileList.sort((a: dirFileInterface, b: dirFileInterface) => b.isDir - a.isDir));
+      setSelectedRowKeys([]);
+    } else {
+      Toast.fail(res.msg)
+    }
+  }
+
   async function fetchSearchFolderList(keyword: string) {
     setLoading(true)
     let res: resInterface = await searchFolderList(encodeURIComponent(keyword));
@@ -60,6 +85,7 @@ export function useFile(config?: any) {
     fetchSearchFolderList,
     loading,
     dirFileList,
+    searchTypeFolderList,
     selectedRowKeys,
   }
 }

@@ -55,7 +55,9 @@ const Home = ({route, navigation} : any) => {
   }
 
   const gotoPath = (item: kindInterface) => {
-    console.log(item);
+    navigation.navigate('FileType', {
+      item
+    })
   };
 
   // 选择
@@ -78,11 +80,11 @@ const Home = ({route, navigation} : any) => {
 
 
   const KindList: kindListType = [
-    { title: "视频", svg: <VideoFile width={50} height={40} />, path: "/videoFile" },
-    { title: "图片", svg: <ImageFile width={50} height={40} />, path: "/imageFile" },
-    { title: "文档", svg: <DocumentFile width={50} height={40} />, path: "/documentFile" },
-    { title: "音频", svg: <AudioFile width={50} height={40} />, path: "/audioFile" },
-    { title: "其他", svg: <OtherFile width={50} height={40} />, path: "/otherFile" }
+    { title: "视频", svg: <VideoFile width={50} height={40} />, path: "/videoFile", type: 3 },
+    { title: "图片", svg: <ImageFile width={50} height={40} />, path: "/imageFile", type: 1 },
+    { title: "文档", svg: <DocumentFile width={50} height={40} />, path: "/documentFile", type: 2 },
+    { title: "音频", svg: <AudioFile width={50} height={40} />, path: "/audioFile", type: 4 },
+    { title: "其他", svg: <OtherFile width={50} height={40} />, path: "/otherFile", type: 5 }
   ];
 
   return <Provider>

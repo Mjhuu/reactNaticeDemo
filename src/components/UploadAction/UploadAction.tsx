@@ -75,13 +75,13 @@ const UploadAction = () => {
         <TouchableNativeFeedback>
           <View style={{...styles.actionItem, ...styles.displayFlex, width: (windowWidth - 40) / 3, ...styles.alignItemsCenter}}>
             <AddFile width={70} height={70} />
-            <Text style={{fontWeight: "bold"}}>上传文件</Text>
+            <Text numberOfLines={1} style={{fontWeight: "bold"}}>上传文件</Text>
           </View>
         </TouchableNativeFeedback>
         <TouchableNativeFeedback>
           <View style={{...styles.actionItem, ...styles.displayFlex, width: (windowWidth - 40) / 3, ...styles.alignItemsCenter}}>
             <AddFolder width={70} height={70} />
-            <Text style={{fontWeight: "bold"}}>新建文件夹</Text>
+            <Text numberOfLines={1} style={{fontWeight: "bold"}}>新建文件夹</Text>
           </View>
         </TouchableNativeFeedback>
       </Animatable.View>

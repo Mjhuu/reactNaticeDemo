@@ -3,7 +3,8 @@ import UploadAction from "../components/UploadAction/UploadAction";
 export interface kindInterface {
   title: string
   svg: Document
-  path: string
+  path: string,
+  type: number
 }
 
 export type kindListType = Array<kindInterface>

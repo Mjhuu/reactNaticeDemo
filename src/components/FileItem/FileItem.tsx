@@ -8,7 +8,7 @@ import { DetailAction } from "../Svg";
 import { SET_PROP } from "../../Store/actionTypes";
 import { useDispatch } from "react-redux";
 
-const FileItem = (props: {width?: number, fileItem: dirFileInterface, onOpenFolder: (fileItem: dirFileInterface) => void}) => {
+const FileItem = (props: {width?: number, fileItem: dirFileInterface, onOpenFolder?: (fileItem: dirFileInterface) => void}) => {
   let {fileItem} = props;
   const dispatch = useDispatch();
   const windowWidth = useWindowDimensions().width;
@@ -21,7 +21,7 @@ const FileItem = (props: {width?: number, fileItem: dirFileInterface, onOpenFold
   const openFile = () => {
     if(fileItem.isDir === 1){
       console.log("打开文件夹", fileItem);
-      props.onOpenFolder(fileItem)
+      props.onOpenFolder && props.onOpenFolder(fileItem)
     }else {
       console.log("打开文件");
     }
