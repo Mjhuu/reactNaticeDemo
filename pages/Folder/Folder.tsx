@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { ScrollView, View, Text, RefreshControl, useWindowDimensions } from "react-native";
-import { dirFileInterface } from "../../src/interface";
+import { dirFileInterface, StateInterface } from "../../src/interface";
 import {Provider} from "@ant-design/react-native";
 import styles from "../Home/css";
 import { useFile } from "../../src/Hooks/useFile";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCathe } from "../../src/common/config";
 import FileItem from "../../src/components/FileItem/FileItem";
 import Empty from "../../src/components/Empty/Empty";
@@ -13,6 +13,7 @@ const Folder = ({ navigation, route } : any) => {
   const {fileItem, path}: {fileItem: dirFileInterface, path: string} = route.params;
   const { loading, fetchSearchFolderList, fetchFolderList, dirFileList, selectedRowKeys } = useFile();
 
+  const folderNeedRefresh = useSelector((state: StateInterface) => state.folderNeedRefresh);
   const dispatch = useDispatch();
   const windowWidth = useWindowDimensions().width;
 
@@ -33,6 +34,12 @@ const Folder = ({ navigation, route } : any) => {
 
   // 重新设置标题栏
   navigation.setOptions({ title: fileName });
+
+  useEffect(() => {
+    if(folderNeedRefresh){
+      onRefresh()
+    }
+  },[folderNeedRefresh])
 
   // 首次加载时 请求文件列表
   useEffect(() => {
@@ -83,7 +90,7 @@ const Folder = ({ navigation, route } : any) => {
         {/*空数据*/}
         <View style={{...styles.fileList}}>
           {
-            dirFileList.map((i: dirFileInterface) => <FileItem key={i.id} fileItem={i} width={(windowWidth - 40) / 3} onOpenFolder={(fileItem) => onOpenFolder(fileItem)} />)
+            dirFileList.map((i: dirFileInterface) => <FileItem key={i.id} fileItem={i} currentPath={path} width={(windowWidth - 40) / 3} onOpenFolder={(fileItem) => onOpenFolder(fileItem)} />)
           }
         </View>
         {

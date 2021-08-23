@@ -14,6 +14,9 @@ export interface StateInterface {
   uploadActionShow: boolean,
   fileDetailShow: boolean,
   loginState: boolean,
+  homeNeedRefresh: boolean,
+  folderNeedRefresh: boolean,
+  kindNeedRefresh: boolean,
   keypair: {
     publicKey: string,
     privateKey: string,
@@ -36,6 +39,8 @@ export interface dirFileInterface {
   skey: string,
   type: number,
   userId: string,
+  currentPath?: string
+  path?: string
 }
 
 export interface resInterface {

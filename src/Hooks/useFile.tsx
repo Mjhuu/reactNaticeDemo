@@ -3,8 +3,11 @@ import { getFolderList, searchByType, searchFolderList } from "../Api";
 import { dirFileInterface, resInterface } from "../interface";
 import { Toast } from "@ant-design/react-native";
 import moment from "moment";
+import { SET_PROP } from "../Store/actionTypes";
+import { useDispatch } from "react-redux";
 
 export function useFile(config?: any) {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [dirFileList, setDirFileList] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -31,6 +34,21 @@ export function useFile(config?: any) {
       setDirFileList(dirFileList.sort((a: dirFileInterface, b: dirFileInterface) => b.isDir - a.isDir));
       setSelectedRowKeys([]);
 
+      dispatch({
+        type: SET_PROP,
+        prop: 'homeNeedRefresh',
+        value: false
+      })
+      dispatch({
+        type: SET_PROP,
+        prop: 'folderNeedRefresh',
+        value: false
+      })
+      dispatch({
+        type: SET_PROP,
+        prop: 'kindNeedRefresh',
+        value: false
+      })
     } else {
       Toast.fail(res.msg)
     }

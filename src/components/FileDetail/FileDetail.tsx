@@ -16,6 +16,8 @@ import { dealFileType, fileType } from "../../Data";
 import moment from "moment";
 import {Move, Share, Rename, Delete, DownLoad} from "../Svg";
 import { dealFileSize } from "../../common";
+import { Modal, Toast } from "@ant-design/react-native";
+import { reNameFile } from "../../Api";
 
 const FileDetail = () => {
   const dispatch = useDispatch();
@@ -34,10 +36,26 @@ const FileDetail = () => {
   ]
 
   console.log({ fileItem });
+  let path: string | undefined;
   let fileName = '---', Svg = fileType.other;
   if(JSON.stringify(fileItem) !== '{}'){
     fileName = fileItem.name.split('/')[fileItem.name.split('/').length - 1];
     Svg = fileItem.isDir === 1 ? fileType.folder : dealFileType(fileName);
+
+    if(fileItem.currentPath === 'type'){
+      // fileItem.path = fileItem.currentPath;
+      path = fileItem.path;
+      if(fileItem.isDir === 1) {
+
+      }else{
+        // @ts-ignore
+        // fileItem.path = fileItem.path.split('/').slice(0, fileItem.path.split('/').length - 1).join('/') || '/';
+        path = fileItem.path.split('/').slice(0, fileItem.path.split('/').length - 1).join('/')
+      }
+    }else {
+        path = fileItem.currentPath;
+
+    }
   }
 
   useEffect(() => {
@@ -61,6 +79,76 @@ const FileDetail = () => {
     setOpacity(0);
     setTranslateY(windowHeight);
   };
+
+  // 三大方块点击
+  function actionNavClick(i: any) {
+    hide();
+    console.log(path);
+
+    // hide();
+    switch (i.name) {
+      case 'share':
+        break;
+      case 'move':
+        break;
+      case 'rename': {
+        Modal.prompt(
+          '重命名',
+          '请输入修改后的文件（夹）名称',
+          newName => {
+            return new Promise(async (resolve, reject) => {
+              console.log({ newName });
+              if(newName === fileName){
+                resolve()
+              }else {
+                Toast.loading('重命名中', 0);
+                let res = await reNameFile({
+                  path: decodeURIComponent((path === '/' ? '' : path) + '/' + fileItem.name),
+                  name: newName
+                });
+                Toast.removeAll()
+                if (res.code === 200) {
+                  Toast.success(res.msg);
+                  if(fileItem.currentPath === '/'){
+                    dispatch({
+                      type: SET_PROP,
+                      prop: 'homeNeedRefresh',
+                      value: true
+                    })
+                    console.log("首页需要重新请求");
+                  }else if(fileItem.currentPath === 'type'){
+                    dispatch({
+                      type: SET_PROP,
+                      prop: 'kindNeedRefresh',
+                      value: true
+                    })
+                    console.log("分类页面需要重新请求");
+                  }else {
+                    dispatch({
+                      type: SET_PROP,
+                      prop: 'folderNeedRefresh',
+                      value: true
+                    })
+                    console.log("文件夹内需要重新请求");
+                  }
+                  resolve()
+                } else {
+                  reject()
+                  Toast.fail(res.msg)
+                }
+              }
+            })
+          },
+          'default',
+          fileName,
+          ['请输入文件名']
+        );
+      }
+        break;
+      default:
+        break
+    }
+  }
 
   return (fileDetailShow && JSON.stringify(fileItem) !== '{}') ? <View style={{
     width: windowWidth,
@@ -116,7 +204,7 @@ const FileDetail = () => {
           <View style={{...styles.fileDetailActive}}>
             {
               actionNav.map(i => <View key={i.name} style={{...styles.fileDetailActiveItem, width: (windowWidth - 40 - 60) / 3}}>
-                <TouchableNativeFeedback>
+                <TouchableNativeFeedback onPress={() => actionNavClick(i)}>
                   <View style={{height: 90, backgroundColor: '#f5f5f5', justifyContent: "center", alignItems: 'center'}}>
                     {i.svg}
                     <Text numberOfLines={1} style={{marginTop: 5}}>{i.title}</Text>

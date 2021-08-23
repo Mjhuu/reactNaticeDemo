@@ -14,7 +14,7 @@ import { Button, Icon, Provider, Toast, ActionSheet } from "@ant-design/react-na
 import Empty from "../../src/components/Empty/Empty";
 import styles from "./css";
 import { DocumentFile, ImageFile, OtherFile, VideoFile, AudioFile, UploadAdd } from "../../src/components/Svg";
-import { kindInterface, kindListType, dirFileInterface } from "../../src/interface";
+import { kindInterface, kindListType, dirFileInterface, StateInterface } from "../../src/interface";
 import {useAnimate} from "../../src/Hooks/useAnimate"
 import * as Animatable from 'react-native-animatable';
 import FileItem from "../../src/components/FileItem/FileItem";
@@ -23,12 +23,18 @@ import { getCathe } from "../../src/common/config";
 import { SET_UPLOAD_ACTION_SHOW } from "../../src/Store/actionTypes";
 
 const Home = ({route, navigation} : any) => {
-
+  const homeNeedRefresh = useSelector((state: StateInterface) => state.homeNeedRefresh);
   const dispatch = useDispatch();
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
 
   const { loading, fetchSearchFolderList, fetchFolderList, dirFileList, selectedRowKeys } = useFile();
+
+  useEffect(() => {
+    if(homeNeedRefresh){
+      onRefresh()
+    }
+  },[homeNeedRefresh])
 
   // 首次加载时 请求文件列表
   useEffect(() => {
@@ -152,7 +158,7 @@ const Home = ({route, navigation} : any) => {
           {/*空数据*/}
           <View style={{...styles.fileList}}>
             {
-              dirFileList.map((i: dirFileInterface) => <FileItem key={i.id} fileItem={i} width={(windowWidth - 40) / 3} onOpenFolder={(fileItem) => onOpenFolder(fileItem)} />)
+              dirFileList.map((i: dirFileInterface) => <FileItem key={i.id} fileItem={i} currentPath={'/'} width={(windowWidth - 40) / 3} onOpenFolder={(fileItem) => onOpenFolder(fileItem)} />)
             }
           </View>
           {

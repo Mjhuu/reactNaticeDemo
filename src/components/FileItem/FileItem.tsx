@@ -7,8 +7,9 @@ import { useFile } from "../../Hooks/useFile";
 import { DetailAction } from "../Svg";
 import { SET_PROP } from "../../Store/actionTypes";
 import { useDispatch } from "react-redux";
+import { Modal, Toast } from "@ant-design/react-native";
 
-const FileItem = (props: {width?: number, fileItem: dirFileInterface, onOpenFolder?: (fileItem: dirFileInterface) => void}) => {
+const FileItem = (props: {width?: number, fileItem: dirFileInterface, onOpenFolder?: (fileItem: dirFileInterface) => void, currentPath: string}) => {
   let {fileItem} = props;
   const dispatch = useDispatch();
   const windowWidth = useWindowDimensions().width;
@@ -23,7 +24,7 @@ const FileItem = (props: {width?: number, fileItem: dirFileInterface, onOpenFold
       console.log("打开文件夹", fileItem);
       props.onOpenFolder && props.onOpenFolder(fileItem)
     }else {
-      console.log("打开文件");
+      Modal.alert('预览错误', '暂不支持此文件的预览')
     }
   }
 
@@ -32,7 +33,7 @@ const FileItem = (props: {width?: number, fileItem: dirFileInterface, onOpenFold
     dispatch({
       type: SET_PROP,
       prop: 'currentFileDetail',
-      value: fileItem
+      value: { ...fileItem, currentPath: props.currentPath }
     })
     dispatch({
       type: SET_PROP,
