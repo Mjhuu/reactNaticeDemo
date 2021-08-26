@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   RefreshControl
 } from "react-native";
-import { Button, Icon, Provider, Toast, ActionSheet } from "@ant-design/react-native";
+import { Button, Icon, Provider, Toast, Badge } from "@ant-design/react-native";
 import Empty from "../../src/components/Empty/Empty";
 import styles from "./css";
 import { DocumentFile, ImageFile, OtherFile, VideoFile, AudioFile, UploadAdd } from "../../src/components/Svg";
@@ -113,12 +113,16 @@ const Home = ({route, navigation} : any) => {
           style={{ ...styles.navTool, ...styles.displayFlex, ...styles.alignItemsCenter, ...styles.flexDirectionRow }}>
           <View style={{ ...styles.navItem }}>
             <TouchableOpacity activeOpacity={0.6}>
-              <Icon size={25} color={"#000"} name={"cloud-upload"} />
+              <Badge dot text={999999}>
+                <Icon size={25} color={"#000"} name={"cloud-upload"} />
+              </Badge>
             </TouchableOpacity>
           </View>
           <View style={{ ...styles.navItem }}>
-            <TouchableOpacity activeOpacity={0.6}>
-              <Icon size={25} color={"#000"} name={"cloud-download"} />
+            <TouchableOpacity onPress={() => navigation.push('Download')} activeOpacity={0.6}>
+              <Badge dot text={9}>
+                <Icon size={25} color={"#000"} name={"cloud-download"} />
+              </Badge>
             </TouchableOpacity>
           </View>
           <View style={{ ...styles.navItem }}>

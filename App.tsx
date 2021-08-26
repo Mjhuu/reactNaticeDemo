@@ -5,7 +5,7 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { Provider, } from "react-redux";
+import { Provider } from "react-redux";
 import store from "./src/Store/index";
 // @ts-ignore
 import Badge from "react-native-tab-navigator/Badge";

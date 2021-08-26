@@ -4,6 +4,7 @@
  * @returns {boolean}
  */
 import { fileType } from "../Data";
+import RNFetchBlob from "react-native-fetch-blob";
 
 export function check_name(val) {
   return (/^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_])+$/.test(val));
@@ -37,6 +38,21 @@ export function check_pass(val) {
     code_length++;
   }
   return value_length >= 6 && value_length <= 16 && !/\s/.test(value) && code_length >= 2;
+}
+/*判断文件是否存在*/
+export function createFile(path) {
+  return new Promise((resolve, reject) => {
+    RNFetchBlob.fs.exists(path)
+      .then((exist) => {
+        if (!exist) {
+          RNFetchBlob.fs.createFile(path, [], "ascii").then(() => {
+            resolve(true)
+          });
+        }else {
+          resolve(true)
+        }
+      });
+  })
 }
 
 

@@ -9,7 +9,7 @@ import Mine from "./Mine/Mine";
 import Login from "./Login/LoginScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { StateInterface } from "../src/interface";
+import { dbType, downloadItem, downloadStatus, StateInterface } from "../src/interface";
 import { delCathe, getCathe } from "../src/common/config";
 import { RSAUtil } from "../src/common/rsa";
 import { SET_PROP, SET_USER_INFO } from "../src/Store/actionTypes";
@@ -17,6 +17,7 @@ import { getUserInfo } from "../src/Api";
 import { Toast } from "@ant-design/react-native";
 import Folder from "./Folder/Folder";
 import FileType from "./FileType/FileType";
+import Download from "./Download/Download";
 
 const Stack = createStackNavigator();
 
@@ -26,7 +27,44 @@ const NavPage = () => {
   const loginState = useSelector((state: StateInterface) => state.loginState);
   const dispatch = useDispatch();
 
+  const _init = async () => {
+    // 判断本地是否有下载列表
+    let downloadList = await getCathe(dbType.downloadListInfo);
+    if(downloadList){
+      console.log("有下载列表");
+      dispatch({
+        type: SET_PROP,
+        prop: 'hasDownloadList',
+        value: true
+      })
+      let downList = JSON.parse(downloadList) || [];
+
+      downloadList = downList.filter((i: downloadItem) => {
+        // 如果关闭应用之前处于解密状态
+        if(i.status === downloadStatus.decrypting){
+          i.status = downloadStatus.needRestartDecrypt
+          i.decryptProgress = 0
+        }else if(i.status === downloadStatus.downloading){
+          // 如果关闭之前处于下载状态
+          i.status = downloadStatus.pause
+        }
+        return !i.hidden
+      });
+
+      dispatch({
+        type: SET_PROP,
+        prop: 'downloadList',
+        value: downloadList
+      })
+    }else {
+      console.log("没有下载列表");
+    }
+  }
+
   useEffect(() => {
+
+    // 初始化
+    _init()
     // 判断是否登录
     isLogin()
   }, [])
@@ -145,6 +183,7 @@ const NavPage = () => {
         />
         <Stack.Screen options={{}} name="Folder" component={Folder} />
         <Stack.Screen options={{}} name="FileType" component={FileType} />
+        <Stack.Screen options={{}} name="Download" component={Download} />
       </> : <>
         <Stack.Screen options={{ headerShown: false, animationTypeForReplace: !loginState ? 'pop' : 'push', }} name="Login" component={Login} />
       </>
